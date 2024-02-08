@@ -1,0 +1,642 @@
+
+{% extends "base.html" %}
+
+
+{% block title %}
+  <title>GenoMycAnalyzer</title>
+{% endblock %}
+
+{% block content %}
+<section class="bg-slate-100">
+    <nav class="flex flex-wrap items-center justify-between p-2 bg-white teal-100">
+    <div class="flex-grow block w-full lg:flex lg:w-auto lg:items-center">
+        <div class="text-sm lg:flex-grow">
+        <a href="/samples/summary/{{SampleID}}" class="block mt-4 ml-4 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Summary </a>
+        <a href="/samples/statistics/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Statistics&QC </a>
+        <a href="/samples/variants/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Variants </a>
+        <a href="/samples/rav/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> RAV </a>
+        <a href="/samples/report/{{SampleID}}" class="block mt-4 ml-6 text-orange-700 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Report </a>
+        </div>
+    </div>
+    </nav>
+    <div class="h-0.5 bg-gradient-to-r from-cyan-200 to-blue-300"></div>
+
+    
+    <!-- Sample Report page -->
+
+    <div class="col-start-1 row-start-1 row-end-2 p-2 bg-white box group rounded-xl">
+        <div class="flex items-end justify-between w-auto h-auto space-y-1">
+            <div class="h-6 ml-2 font-bold w-30 item">
+                <span class="border bg-teal-600 px-0.5"></span>
+                <span class="ml-1">Report</span>
+            </div>
+        </div>
+        
+        <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+        
+        
+        <div class=" justify-center items-center" style="width:1000px;overflow:auto;border:8px%">
+
+            <!-- Sample details grid -->
+            <div class="text-2xl font-bold text-center h-7">MycoChase Sequence Analysis Report</div>
+            <div class="mt-5 ml-2 font-bold h-7">Sample Details</div>
+            <div class="grid grid-cols-4 mt-2 ml-2 mr-2 text-sm text-gray-700">
+            <div class="pl-2 outline-1 outline">Patient ID:</div>
+            <div class="pl-2 outline-1 outline">{{PatientID}}</div>
+            <div class="pl-2 outline-1 outline">Patient name:</div>
+            <div class="pl-2 outline-1 outline">{{PatientName}}</div>
+            <div class="pl-2 outline-1 outline">Sample ID:</div>
+            <div class="pl-2 outline-1 outline">{{DataID}}</div>
+            <div class="pl-2 outline-1 outline">Sample Received Date:</div>
+            <div class="pl-2 outline-1 outline">{{RecvDate}}</div>
+            <div class="pl-2 outline-1 outline">Sample Source:</div>
+            <div class="pl-2 outline-1 outline">{{Source}}</div>
+            <div class="pl-2 outline-1 outline">Library Prep Date:</div>
+            <div class="pl-2 outline-1 outline">{{LibPrepDate}}</div>
+            <div class="pl-2 outline-1 outline">Culture Type:</div>
+            <div class="pl-2 outline-1 outline">{{CultureType}}</div>
+            <div class="pl-2 outline-1 outline">Sequencing Date:</div>
+            <div class="pl-2 outline-1 outline">{{SeqDate}}</div>
+            <div class="pl-2 outline-1 outline">Laboratory Technician:</div>
+            <div class="pl-2 outline-1 outline">{{LabTechnician}}</div>
+            <div class="pl-2 outline-1 outline">Report Date:</div>
+            <div class="pl-2 outline-1 outline">{{ReportDate}}</div>
+            <div class="pl-2 outline-1 outline">Contact:</div>
+            <div class="col-span-3 pl-2 outline-1 outline">{{Contact}}</div>
+            </div>
+            
+            <!-- Assay details grid -->
+            <div class="mt-5 ml-2 font-bold h-7">Assay Details</div>
+            <div class="grid grid-cols-4 mt-2 ml-2 mr-2 text-sm text-gray-700">
+            <div class="pl-2 outline-1 outline">Sequencer:</div>
+            <div class="pl-2 outline-1 outline">Illumina MiSeqDx</div>
+            <div class="pl-2 outline-1 outline">Method:</div>
+            <div class="pl-2 outline-1 outline">Targeted Panel NGS</div>
+            <div class="pl-2 outline-1 outline">Pipeline:</div>
+            <div class="pl-2 outline-1 outline">MycoAnalyzer version 1.0.0</div>
+            <div class="pl-2 outline-1 outline">Reference:</div>
+            <div class="pl-2 outline-1 outline">H37Rv (NC_000962.3)</div>
+            <div class="pl-2 outline-1 outline">Quality Control:</div>
+            <div class="col-span-3 pl-2 outline-1 outline">{{QualityControl}}</div>
+            </div>
+
+            <!-- MycoChase Species Identification grid -->
+            <div class="mt-5 ml-2 font-bold h-7">MycoChase Species Identification</div>
+            <div class="grid grid-cols-4 mt-2 ml-2 mr-2 text-sm text-gray-700">
+            <div class="pl-2 outline-1 outline">Species (%)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">{{Species}}</div>
+            <div class="pl-2 outline-1 outline">Lineage*</div>
+            <div class="col-span-3 pl-2 outline-1 outline">{{Lineage}}</div>
+            <div class="pl-2 outline-1 outline">Spoligotype*</div>
+            <div class="col-span-3 pl-2 outline-1 outline">{{Spoligotype}}</div>
+            </div>
+            <div class="mt-1 ml-2 mr-2 text-xs "> *Lineage and spoligotype are only reported for Mycobacterium tuberculosis complex. The lineage was estimated based on the 90 single nucleotide polymorphisms (SNPs) reported by Napier et al. [Genome Med. 2020;12(1):114]</div>
+            
+            <!-- MycoChase Drug Susceptibility Test grid -->
+            <div class="mt-5 ml-2 font-bold h-7">MycoChase Drug Susceptibility Test</div>
+            <div class="grid grid-cols-9 mt-2 ml-2 mr-2 text-sm text-center text-gray-700 ">
+            <div class="col-span-7 pl-2 text-left outline-1 outline">Resistance (R) is reported when a reported resistance mutation is detected in loci of interest.* Except for RIF and INH, drugs-related mutations cannot be used for diagnosis because they have not been evaluated through clinical trials. Regarding the RIF and INH, mutations with tier 3 (uncertain significance) need to be further verified. Susceptible (S) = no mutation is detected in the genes associated with resistance to the drugs or all detected mutations are considered to be consistent with susceptibility. Susceptible(S) does not exclude the possibility of resistance.</div>
+            <div class="col-span-2 pl-2 text-center outline-1 outline">No mutation detected <br>MDR**<br>XDR**</div>
+            <div class="col-span-1 pl-2 outline-1 outline">Class</div>
+            <div class="col-span-2 pl-2 outline-1 outline">Drug</div>
+            <div class="col-span-3 pl-2 outline-1 outline">Gene Target# (AA change, VAF, Tier)</div>
+            <div class="col-span-1 pl-2 outline-1 outline">Result</div>
+            <div class="col-span-2 pl-2 outline-1 outline">Comments</div>
+
+            <div class="row-span-4 pl-2 outline-1 outline">1<sup>st</sup>-line drugs</div>
+            <div class="col-span-2 pl-2 outline-1 outline">ISONIAZID (INH)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in INH %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in INH %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}                
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in INH %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            
+            <div class="col-span-2 pl-2 outline-1 outline">RIFAMPICIN (RIF)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in RIF %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in RIF %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in RIF %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="col-span-2 pl-2 outline-1 outline">ETHAMBUTOL (EMB)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in EMB %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in EMB %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in EMB %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="col-span-2 pl-2 outline-1 outline">PYRAZINAMIDE (PZA)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in PZA %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in PZA %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in PZA %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="row-span-5 pl-2 outline-1 outline">2<sup>st</sup>-line drugs<br>(group A)</div>
+            <div class="col-span-2 pl-2 outline-1 outline">LEVOFLOXACIN (LFX)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in LFX %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in LFX %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in LFX %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+
+            <div class="col-span-2 pl-2 outline-1 outline">OFLOXACIN (OFX)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in OFX %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in OFX %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}    
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in OFX %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+
+            <div class="col-span-2 pl-2 outline-1 outline">MOXIFLOXACIN (MFX)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in MFX %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in MFX %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in MFX %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+
+            <div class="col-span-2 pl-2 outline-1 outline">LINEZOLID (LZD)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in LZD %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in LZD %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in LZD %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+
+            <div class="col-span-2 pl-2 outline-1 outline">BEDAQUILINE (BDQ)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in BDQ %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in BDQ %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in BDQ %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+
+            <div class="row-span-1 pl-2 outline-1 outline">2<sup>st</sup>-line drugs<br>(group B)</div>
+            <div class="col-span-2 pl-2 outline-1 outline ">CLOFAZIMINE (CFZ)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in CFZ %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in CFZ %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in CFZ %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}     
+            </div> 
+            
+            <!-- tailwindcss.config.js 에서 별도로 추가해야 row-span-7을 사용할수 있음 -->
+            <div class="row-span-6 pl-2 outline-1 outline">2<sup>st</sup>-line drugs<br>(group C)</div>
+            <div class="col-span-2 pl-2 outline-1 outline">DELAMANID (DEL)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in DEL %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in DEL %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in DEL %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            
+            <div class="col-span-2 pl-2 outline-1 outline">AMIKACIN (AMK)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in AMK %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in AMK %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in AMK %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+
+            <div class="col-span-2 pl-2 outline-1 outline">CAPREOMYCIN (CAP)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in CAP %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in CAP %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in CAP %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+
+            <div class="col-span-2 pl-2 outline-1 outline">KANAMYCIN (KAN)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in KAN %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in KAN %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in KAN %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+
+            <div class="col-span-2 pl-2 outline-1 outline">STREPTOMYCIN (STM)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in STM %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in STM %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in STM %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}    
+            </div>
+
+            <div class="col-span-2 pl-2 outline-1 outline">ETHIONAMIDE (ETO) <br>PROTHIONAMIDE (PTO)</div>
+            <div class="col-span-3 pl-2 outline-1 outline">
+                {% for lt in ETO %} 
+                {% if(loop.index<2) %}
+                    {{lt.Gene}}
+                {% else %}
+                    <br>{{lt.Gene}}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-span-1 pl-2 outline-1 outline">
+                {% for lt in ETO %} 
+                {% if(loop.index<2) %}
+                    {{lt.Result}}
+                {% else %}
+                    <br>{{lt.Result}}
+                {% endif %}
+                {% endfor %}     
+            </div>
+            <div class="col-span-2 pl-2 outline-1 outline">
+                {% for lt in ETO %} 
+                {% if(loop.index<2) %}
+                    {{lt.Coment}}
+                {% else %}
+                    <br>{{lt.Coment}}
+                {% endif %}
+                {% endfor %}    
+            </div>
+            </div>
+            
+            <div class="mt-1 ml-2 mr-2 text-xs"> *The target genes for resistance mutations were derived from the Catalogue of mutations in Mycobacterium tuberculosis complex and their association with drug resistance (2021, World Health Organization; Lancet Microbe. 2022;3(4):e265)<br>
+            **MDR, multi-drug resistance; XDR: extensively drug resistance <br>
+            #AA change, amino acids change; VAF, variant allele frequency; Tier is derived from the Catalogue of mutations in Mycobacterium tuberculosis complex and their association with drug resistance (2021, World Health Organization).
+            </div>
+            
+            
+            <!-- Final Result -->
+            <div class="mt-5 ml-2 font-bold h-7">Final Result</div>
+            <div class="h-16 pl-2 mt-2 ml-2 mr-2 text-gray-700 outline outline-1">{{FinalResult}}</div>
+            <div class="mt-1 ml-2 mr-2 text-xs"> *The result for drug resistance is based on tier 1 or 2 mutations reported by the Catalogue of mutations in Mycobacterium tuberculosis complex and their association with drug resistance (2021, World Health Organization).</div>
+
+            <!-- Additional Comment -->
+            <div class="mt-5 ml-2 font-bold h-7">Additional Comment</div>
+            <div class="h-32 pl-2 mt-2 ml-2 mr-2 text-gray-700 outline outline-1">{{AdditionalComment}}</div>
+            <div class="mt-1 ml-2 mr-2 text-xs"> *The result for drug resistance is based on tier 1 or 2 mutations reported by the Catalogue of mutations in Mycobacterium tuberculosis complex and their association with drug resistance (2021, World Health Organization).</div>
+
+            <!-- Authorized By grid -->
+            <div class="mt-5 ml-2 font-bold h-7">Authorized By</div>
+            <div class="grid grid-cols-5 mt-2 ml-2 mr-2 text-sm text-center text-gray-700 ">
+            <div class="col-span-1 row-span-2 pl-2 outline-1 outline">Reporting Laboratory:</div>
+            <div class="col-span-2 row-span-2 pl-2 text-left outline-1 outline">{{ReportLab}}</div>
+            <div class="pl-2 outline-1 outline">Doctor’s Name:</div>
+            <div class="pl-2 outline-1 outline">{{DoctorName}}</div>
+            <div class="pl-2 outline-1 outline">Signature:</div>
+            <div class="pl-2 outline-1 outline"></div>
+            <div class="pl-2 outline-1 outline">Address:</div>
+            <div class="col-span-4 pl-2 text-left outline-1 outline">{{LabAddress}}</div>
+        </div>
+        
+        <br>
+    </div>
+
+</section>
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+{% block scripts %} 
+
+  
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

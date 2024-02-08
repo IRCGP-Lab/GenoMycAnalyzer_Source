@@ -1,0 +1,138 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <!--
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    -->
+
+  </head>
+
+<body>
+	
+	<!-- User add message box -->
+    <form  >
+            <input type="text" name="ID">
+            <input type="text" name="Name">
+            <BUTTON id="listButton" type="#">Submit</BUTTON >
+    </form>     
+	
+
+ 
+<script>
+$(document).ready(function(){
+    $("#listButton").click(getMemberList4); //id="listButton"인 태그에 click하면 function getMemberList() 실행
+});
+function getMemberList(){
+		console.log("send");
+		var jsonData = { // Body에 첨부할 json 데이터
+    				ID : "IdABC",
+    				Name : "name123"
+    			};  
+	$.ajax({
+		  type:"post",
+		  url:"http://192.168.1.12:8000/samples/addsample__",
+		  data: JSON.stringify(jsonData),
+		  dataType : 'json',
+		  async: true, //비동기 여부
+    	timeout: 5000, //타임 아웃 설정
+		  contentType: "application/json; charset=utf-8",
+		  // [응답 확인 부분 - json 데이터를 받습니다]
+		success: function(response) {
+			console.log("");
+			console.log("[requestPostBodyJson] : [response] : " + JSON.stringify(response));    				
+			console.log("");    				
+		},
+		  // [에러 확인 부분]
+		error: function(xhr) {
+			console.log("");
+			console.log("[requestPostBodyJson] : [error] : " + JSON.stringify(xhr));
+			console.log("");    				
+		},
+		  complete:function(data,textStatus) {
+    				console.log("");
+    				console.log("[requestPostBodyJson] : [complete] : " + textStatus);
+    				console.log("");    				
+    			}
+	  })   
+}
+
+
+
+// POST 메서드 구현 예제
+async function postData(url = '', data = {}) {
+  // 옵션 기본 값은 *로 강조
+  const response = await fetch(url, {
+    method: 'post', // *GET, POST, PUT, DELETE 등
+    headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(data), // body의 데이터 유형은 반드시 "Content-Type" 헤더와 일치해야 함
+  });
+  return response.json(); // JSON 응답을 네이티브 JavaScript 객체로 파싱
+}
+
+
+
+
+function getMemberList2(){
+ //debugger;
+	const data = { ID:'id123',Name:'name123' }
+	let axios = require('axios')
+	axios.post('http://192.168.1.12:8000/samples/addsample__', data).then(response => (console.log(response.url)))
+	 //debugger;
+}
+
+
+function getMemberList3(){
+	data = { 'ID':'id123','Name':'name123' }
+
+	axios({
+            method: 'post', //통신 방식
+            url: 'http://192.168.1.26:8000/samples/addsample__', //통신할 페이지
+            data: JSON.stringify(data)//인자로 보낼 데이터
+          })
+            .then(response=>{
+                //document.getElementById('boom').innerText=response.data.num;
+                console.log(response);
+            })
+            .catch(error=>{
+               // document.getElementById('boom').innerText='error';
+                console.log(error);
+            })
+			
+}
+
+function getMemberList4(){
+ //debugger;
+  $.ajax({
+         type: "post",
+         url: "http://192.168.1.12:8000/samples/addsample__",
+         data: "{'ID':'kamal','Name':'na123'}",
+         contentType: "application/json",  
+         dataType: 'json', 
+         success: function(data)
+         { console.log(data); 
+
+         }});
+}
+
+
+		 
+</script>
+
+	
+</body>
+
+	</html>
+
+
+

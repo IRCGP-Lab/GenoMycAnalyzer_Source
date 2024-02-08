@@ -1,0 +1,372 @@
+{% extends "base.html" %} {% block title %}
+<title>GenoMycAnalyzer</title>
+{% endblock %} {% block content %}
+
+
+
+
+<section class="w-[1000px] rounded-sm px-10 mx-auto py-10 bg-slate-50">
+    <h1 id="m_genomycanalyzer" class="font-bold text-3xl">GenoMycAnalyzer</h1>
+    <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
+  
+    <p class="py-3 leading-5">GenoMycAnalyzer is a web based service to analyze samples to identify Mycobacteria <em>tuberculosis</em> drug resistance and non-tuberculous Mycobacteria(NTM). With an automated pipeline, the user-uploaded paired end sequencing data is processed to provide the user with information on various aspects of the sample such as the predicted Mycobacterial species or the molecular drug susceptibility.</p>
+    <p class="py-3 leading-5">This guide consists of two parts: <a href="#getting-started" class="text-blue-600"> Getting Started</a> for a quick guide, and a <a href="#vignette" class="text-blue-600">Vignette</a> for a more detailed guide with an example. Use the ctrl-F function on this page for the explanation of the feature of interest.</p>
+    <br>
+  
+    <hr class="w-60 h-1 my-1 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
+    <h2 id="m_table-of-contents" class="font-bold text-2xl">Table of Contents</h2>
+    <div class="ml-10">
+      <ul class="mt-3 list-disc indent-6 list-outside text-blue-600">
+        <li>
+          <a href="#getting-started" rel="noreferrer">Getting Started</a>
+          <ul class="list-disc list-inside">
+            <li><a href="#quick-guide" rel="noreferrer">Quick guide</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#interpretation-of-the-result" rel="noreferrer">Interpretation of the Result</a>
+          <ul class="list-disc list-inside">
+            <li><a href="#summary" rel="noreferrer">Summary</a></li>
+            <li><a href="#statisticsqc" rel="noreferrer">Statistics&amp;QC</a></li>
+            <li><a href="#variants" rel="noreferrer">Variants</a></li>
+            <li><a href="#target-gene-large-deletion" rel="noreferrer">Large deletion</a></li>
+            <li><a href="#rav" rel="noreferrer">RAV</a></li>
+            <li><a href="#report" rel="noreferrer">Report</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#vignette" rel="noreferrer">Vignette</a>
+          <ul class="list-disc list-inside">
+            <li><a href="#uploading-the-data" rel="noreferrer">Uploading the data</a></li>
+            <li><a href="#initializing-an-analysis-job" rel="noreferrer">Initializing an Analysis job</a></li>
+            <li><a href="#interpretation-of-the-result_1" rel="noreferrer">Interpretation of the result</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <hr class="w-60 h-1 my-1 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
+    <br>
+  
+    <h2 id="getting-started" class="font-bold text-2xl">Getting started</h2>
+    <hr class="w-300 h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
+    <p class="py-5 leading-5">In the GenoMycAnalyzer pipeline, various tools are arranged in a pipeline to analyze NGS data. For the information on the tools used and the theory behind the choice, refer to the <strong>About</strong> page. (Hyperlink to the ABOUT page)</p>
+    <h3 id="quick-guide" class="font-bold text-1xl">Quick guide</h3>
+    <ol class="mt-3 list-decimal indent-6 list-inside">
+      <li class="mt-3">
+        <a class="mt-3">Upload your data in the <strong>Data</strong> section by clicking the <strong>ADD</strong> button.</a>
+        <p class="mt-3 ml-4"><strong>Warning: Do not refresh or close the page during the upload.</strong></p>
+      </li>
+      <li class="mt-3">
+        <a>In the <strong>Analysis</strong> webpage, a new analysis job can be created by clicking the "ADD" button.</a>
+        <p class="mt-3 ml-4">The data uploaded in step 1 can be selected. Note that additional metadata can be given in this step, such as the Patient ID and the Sample ID.</p>
+        <ul class="mt-3 ml-16 list-disc list-outside">
+          <li>
+            <p>Additional analysis parameter can be changed using the <strong>ANALYSIS OPTIONS</strong> in the personal options. The options can be accessed by clicking on the account information in the upper right corner. Refer to the <a href="#vignette" class="text-blue-600">Vignette</a> for a deeper explanation of each category.</p>
+          </li>
+          <li>
+            <p>Multiple jobs can be uploaded in a batch using the <strong>BATCH UPLOAD</strong> function. Refer to the <a href="#vignette" class="text-blue-600">Vignette</a> for a deeper explanation of how this works.</p>
+          </li>
+        </ul>
+      </li>
+      <li class="mt-3">
+        <a class="">After the job creation, the analysis job can be initiated by clicking on the <strong>START</strong> button either in the <strong>Analysis</strong> webpage or inside the summary page of the job.</a>
+        <p class="mt-3 ml-4">The summary page of the job can be opened by clicking on the arrow in the detailed view column.</p>
+      </li>
+      <li class="mt-3">The job status can be checked in the <strong>Status</strong> column in the <strong>Analysis list</strong> page or inside the <strong>Summary</strong> page of the job</li>
+      <li class="mt-3">When the job is done, the analysis results can be accessed in the <strong>Summary</strong> page.</li>
+    </ol>
+    <br>
+    <br>
+  
+    <h2 id="interpretation-of-the-result" class="font-bold text-2xl">Interpretation of the result</h2>
+    <hr class="w-300 h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
+    <br>
+  
+    <p class="leading-5">GenoMycAnalyzer provides the user with various analyses of the sample. In this section, each criterion will be explained</p>
+    <br>
+  
+    <h3 id="m_summary" class="font-bold text-1x1">Summary</h3>
+    <p class="mt-3">In the summary page, five major blocks can be seen.</p>
+    <ul class="mt-3 ml-16 list-disc list-outside">
+      <li>
+        <p>The <strong>Sample Info</strong> block summarizes the metadata given at job creation. Note that this information can be edited in this page.</p>
+      </li>
+      <li>
+        <p>The <strong>Analysis Report</strong> block lists all completed and the ongoing pipeline steps.</p>
+      </li>
+      <li>
+        <p>The <strong>Analysis Summary</strong> summarizes the major results of the analysis</p>
+      </li>
+      <li>
+        <p>The <strong>Circos plot</strong> contains the circos plot of the sample. Refer to <a href="https://pubmed.ncbi.nlm.nih.gov/19541911/&amp;source=gmail-html&amp;ust=1700567773679000&amp;usg=AOvVaw1Dq9RDmFXF8e_mcQ3EDZ_3" class="text-blue-600" target="_blank" rel="noreferrer">this paper</a> for the information about this plot.</p>
+      </li>
+      <li>
+        <p>The <strong>Molecular drug susceptibility testing</strong> block contains the information on drug resistence of the sample on the 15 drugs.</p>
+      </li>
+    </ul>
+    <br>
+  
+    <h3 id="statisticsqc" class="font-bold text-1x1">Statistics&amp;QC</h3>
+    <p class="mt-3">In the Statistics&amp;QC page, the actual numbers of the mapping information is given in the <strong>Basic statistics</strong> block.</p>
+    <ul class="mt-3 ml-16 list-disc list-outside">
+      <li>
+        <p>The <strong>QC</strong> block records the various QC steps and their status. If any of the QC measure fails, the QC pipeline identifies it as failed QC.</p>
+      </li>
+      <li>
+        <p>The <strong>Lineage &amp; Spoligotype for M. tuberculosis</strong> block provides the user with information used for further subtyping of <em>tuberculosis</em> species.</p>
+      </li>
+      <li>
+        <p>In the <strong>Species prediction statistic</strong> block, the information on identified species in the sample is recorded.</p>
+      </li>
+    </ul>
+    <br>
+  
+    <h3 id="variants" class="font-bold text-1xl">Variants</h3>
+    <p class="mt-3">In this section, all indel/mutation variants are recorded with information on their positions. The position of the variants can be visualized with the integrated IGV tool by clicking on the <strong>Position</strong> column</p>
+    <br>
+  
+    <h3 id="target-gene-large-deletion" class="font-bold text-1xl">Large deletion</h3>
+    <p class="mt-3">This section protocols all large deletions detected in the targeted four genes, <i>(pncA, katG, gid and ethA)</i>. The deletion location can be visualized with the integrated IGV tool by clicking on the <strong>Position</strong> column.</p>
+    <br>
+  
+    <h3 id="rav" class="font-bold text-1xl">RAV</h3>
+    <p class="mt-3">The RAV stands for resistance associated variants, and it lists all variants that would induce drug resistance. Unlike the RAV section, this section provides the user with additional information on the amino acid change and its resistance target.</p>
+    <br>
+  
+    <h3 id="report" class="font-bold text-1xl">Report</h3>
+    <p class="mt-3">In the Report tab, the summary of the analysis job is generated. This analysis includes all analyses in a single document. Additional comments can be added using the <strong>Comment Edit</strong> option, and the whole report can be downloaded in a pdf file using the <strong>PDF Download</strong> button.</p>
+    <br><br><br><br>
+  
+    <h2 id="vignette" class="font-bold text-2xl">Vignette</h2>
+    <hr class="w-300 h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
+    <p class="mt-3">In this section, a small example case will be demonstrated as a showcase of interpreting the results.</p>
+    <br>
+  
+    <h2 id="uploading-the-data" class="font-bold text-2xl">Uploading the data</h2>
+    <p class="mt-3">Download the prepared data <a href="/static/demo_data_R1.fastq.gz" target="_blank" rel="noreferrer" class="text-blue-600">demo_data_R1.fastq.gz</a> and <a href="/static/demo_data_R2.fastq.gz" target="_blank" rel="noreferrer" class="text-blue-600">demo_data_R2.fastq.gz.</a> These two files are used as toy data for the demonstration.</p>
+    <p class="mt-3">After downloading the data, upload them on the server in the Data section with the ADD option. Upon clicking the ADD button, the files can be selected and uploaded in the pop-up window. Note that multiple files can be selected simultaneously for the upload procedure, but all files are required to have fastq.gz suffix.</p>
+    <br>
+  
+    <p><img src="./static/images/1.Data.png" alt="data section"></p>
+    <p><em>Figure 1: The data page. The downloaded files can be uploaded via the ADD button. The uploaded files can be deleted from the server using the DELETE button</em></p>
+    <br>
+  
+    <p><img src="./static/images/2.Upload_screen.png" alt="upload"></p>
+    <p><em>Figure 2: The upload screen. Do not close the window while the file is being uploaded.</em></p>
+    <p class="mt-3">As depicted in the Figure 1, the list of the uploaded data is displayed in a tabular format with additional file data such as the <strong>file size</strong> and the <strong>creation date</strong>. A general recommendation is to name the paired end data files os that the pairs can be clearly identified. Note that upon uploading unwanted data, the data can be deleted by using the <strong>DELETE</strong> button next to the <strong>ADD</strong> button.</p>
+    <p class="mt-3">It is important not to close the window during the uploading process. When the window is closed in the upload screen depicted in Figure 2, the file upload will be canceled. The user will have to re-upload the file.</p>
+    <br>
+  
+    <h2 id="initializing-an-analysis-job" class="font-bold text-2xl">Initializing an Analysis job</h2>
+    <p class="mt-3">After uploading the data, the sample can be queued up for analysis. Again, using the ADD function highlighted with a red rectangle, a job can be initiated.</p>
+    <p class="mt-3"><img src="./static/images/3.Analysis_overview.png" alt="Analysis"></p>
+    <p><em>Figure 3: The analysis page. The downloaded files are queued up for analysis, some metadata can be read in a tabular format.</em></p>
+    <br>
+  
+    <p><img src="./static/images/4.Job_submission.png" alt="Analysis_init"></p>
+    <p><em>Figure 4: Sample registration to prepare for job initialization. Upon clicking the R1 and R2 data file names, the data uploaded from the first step can be selected.</em></p>
+    <p class="mt-3">After clicking on the <strong>ADD</strong> button depicted in Figure 3, the sample registration window pops up. The user can specify the metadata of the sample as depicted in Figure 4. The data selection is done by clicking in the data input area highlighted in Figure 4. After data selection and metadata input, press submit to save the job. The job is not yet started. When false metadata was given, the data can be edited by pressing the paper sign in the leftmost column.</p>
+    <br>
+  
+    <p><img src="./static/images/5.files_processed.png" alt="starting_the_job"></p>
+    <p><em>Figure 5: Job processing procedure. Upon clicking on the START button, the Status changes to "Running step n", and when done, to "Finished"</em></p>
+    <p class="mt-3">As depicted in Figure 5, the job does not yet start after submitting. The user must select the job by clicking on the box in the leftmost column and initiate analysis. The analysis will go through the processing steps automatically. When the analysis is done, the <strong>Status</strong> column changed into <strong>Finished</strong>. When the analysis is done, some results can be seen in the tabular view. These will be further explained in the next chapter.</p>
+    <p class="mt-3">Note that multiple jobs can be started simultaneously by clicking on the wanted jobs' leftmost boxes and pressing <strong>START</strong>.</p>
+    <br>
+  
+    <h3 id="addition-batch-upload" class="font-bold text-1xl">Addition: Batch upload</h3>
+    <p class="mt-3">In cases where there is a batch of samples, adding each sample individually for a job is not efficient. For such cases, the user can make an Excel file with the header as shown in Figure 6. Each column corresponds to the metadata column, which can be seen in Figure 4.</p>
+    <p class="mt"><img src="./static/images/6.Batch_upload.png" alt="batch"></p>
+    <p><em>Figure 6: The Batch upload file. In this file, two samples, QA1 and QA2 will be added as batch to the server. In the analysis page, two separate jobs will be created.</em></p>
+    <br>
+  
+    <h3 id="addition-analysis-options" class="font-bold text-1xl">Addition: Analysis options</h3>
+    <p class="mt-3"><img src="./static/images/7.Analysis_options.png" alt="Analysis_opt_direct"></p>
+    <p><em>Figure 7: Getting to the analysis options. The user needs to click on the account information, then go on Analysis Config.</em></p>
+    <p class="mt-3">GenoMycAnalyzer service is an ensemble of multiple tools in a pipeline. For some tools in the pipeline, separate options can be set. As depicted in Figure 7, the option controls can be reached by hovering on the account information and navigating to <strong>Analysis Config</strong> option.</p>
+    <br>
+  
+    <p><img src="./static/images/8.Analysis_options.png" alt="Analysis_opt"></p>
+    <p><em>Figure 8: Analysis options. The options for individual tools can be set</em></p>
+    <p class="mt-3">In the analysis option page, there are multiple parameters. For users, it is generally advised to use the given parameters, but in specific cases, these options can be changed. A screenshot of the options page is depicted in Figure 8.</p>
+    <ul class="mt-3 ml-16 list-disc list-outside">
+      <li><strong>Reads mapping to host genome (human) &amp; Internal control</strong> decides whether the reads should be mapped against the human reference genome for better QC.</li>
+      <li><strong>Kraken2 minimum base quality</strong> changes the minimum base quality option of the algorithm Kraken. </li>
+      <li><strong>Kraken2 minimum hit groups</strong> This option will allow you to require multiple hit groups (a group of overlapping k-mers that share a common minimizer that is found in the hash table) be found before declaring a sequence classified, which can be especially useful with custom databases when testing to see if sequences either do or do not belong to a particular genome.</li>
+      <li><strong>Braken option -r</strong></li> This option allows the user to change the -r option of Braken
+      <li><strong>Minimum mapping quality</strong> is the QC option to require a certain level of mapping quality to consider a read fit enough for the analysis.</li>
+      <li><strong>Minimum depth</strong> is the minimum depth per position on a mapping read required for the depth.</li>
+      <li><strong>SnpEff option (0~5000)</strong> This option changes the SnpEff parameters. Note that the values have to be between 0 and 50000. </li>
+      <li><strong>VAF (1%~5%)</strong> This option changes the VAF values. Note that the values have te be between 1 and 5. </li>
+    </ul>
+    <p class="mt-3">The options can be saved using the <strong>SAVE</strong> button or reverted to defaults by the <strong>DEFAULT</strong> option in the top left side of the screen.</p>
+    <br>
+  
+    <h2 id="interpretation-of-the-result_1" class="font-bold text-2xl">Interpretation of the result</h2>
+    <br>
+    <h3 id="summary" class="font-bold text-1xl">Summary</h3>
+    <p class="mt-3"><img src="./static/images/9.summary.png" alt="summary"></p>
+    <p><em>Figure 9: Summary page.</em></p>
+    <p class="mt-3">Upon clicking a finished job of choice in the tabular view in the <strong>Analysis</strong> page, the user gets redirected to the summary page.</p>
+    <p class="mt-3">There are six pages in the analysis results: <em>Summary, Statistics&amp;QC, Variants, Target gene large deletion, RAV</em> and <em>Report</em>.</p>
+    <p class="mt-3">The Figure 5 depicts the <strong>Summary page</strong>. There are five major blocks of information:</p>
+    <ul class="mt-3 ml-16 list-disc list-outside">
+      <li><strong>Sample info</strong>: The metadata information provided upon job initialization. This information can be edited using the edit button provided above. An example is depicted in Figure 10.</li>
+      <li><strong>Analysis report</strong>: The pipeline processing status is displayed. If a step fails or is still being processed, the report changes accordingly</li>
+      <li><strong>Analysis summary</strong>: This is the core information the user needs. The information can also be seen in the tabular view in the <strong>Analysis</strong> main page.</li>
+      <li><strong>Molecular drug susceptibility testing</strong>: The drug resistance of the sample is reported against the 15 selected drugs. Note that the resistance is only test for M. <em>Tuberculosis</em> samples. The samples are resistant against drugs colored <strong>red</strong>. In Figure 9, the sample is susceptible to <em>BDQ, CFZ, DLM</em> and <em>LZD</em>, and resistant to the other eleven drugs.</li>
+      <li><strong>Circos plot</strong>: The circos plot of the sample. The plot depicts the sequencing coverage of resistance-related genes in the sample. When a resistant associated variant is detected in the sample, the corresponding location is marked by a green bar, which get larger the deeper the depth in the position. Refer to the <a href="http://circos.ca/" target="_blank" rel="noreferrer" class="text-blue-600">Circos</a> page for more information on the plot structure.</li>
+    </ul>
+    <br>
+    <p><img src="./static/images/10.metadata.png" alt="sample edit"></p>
+    <p><em>Figure 10: Editing the metadata of the analysis job. Extra information such as the Doctor's Name can be given additionally</em></p>
+    <br>
+  
+    <h3 id="statistics-and-qc" class="font-bold text-1xl">Statistics and QC</h3>
+    <p class="mt-3"><img src="./static/images/11.sqc.png" alt="staticsqc"></p>
+    <p><em>Figure 11: Statistics and QC page.</em></p>
+    <p class="mt-3">This page consists of four blocks, mostly on quality control and the primary identification of the sample strains. An example is depicted in Figure 11.</p>
+    <ul class="mt-3 ml-16 list-disc list-outside">
+      <li><strong>Basic Statistics</strong>: General QC statistics and the similarity towards the H37Rv genome. The QC measures according the options chosen in the <strong>Analysis options</strong> can be seen.</li>
+      <li><strong>Quality Control</strong>: There are some measures for quality control specified to ensure the sample is a credible source of information. This section gives the user the information on the criteria of the QC passed. The QC criteria is chosen according to the values chosen in the <strong>Analysis options</strong> page.</li>
+      <li>
+        <strong>Lineage &amp; Spoligotype for M. <em>tuberculosis</em></strong>: Information on the Lineage and the Spoligotype as a measure to accurately identify mycobacterial species. Note that only M <em>Tuberculosis</em> samples are processed in this step. For the sample depicted in Figure 11, the sample is <em>M. Tuberculosis</em>, and the Lineage is 4.9 with the spoligotype 477777777760771.
+      </li>
+      <li><strong>Species prediction statistics</strong>: The information on the determined species of the sample. The number of mapped reads and the mapped rate is also determined. In this sample, 99% of the mapped reads were mapped to <em>M. Tuberculosis</em>.</li>
+    </ul>
+    <p class="mt-3">Note that some steps in the pipeline require fully passed QC measure. A sample with non-sufficient quality will not get a full result.</p>
+    <br>
+  
+    <h3 id="variants" class="font-bold text-1xl">Variants</h3>
+    <p class="mt-3"><img src="./static/images/12.var.png" alt="variants"></p>
+    <p><em>Figure 12: Variants page.</em></p>
+    <p class="mt-3">The variants page, as depicted in Figure 12, lists all the variants to the reference genome. In the tabular view, the position and the depth of the variant can be seen. The exact indel and mutation events and their positions are protocolled, as well as the coded gene and the impact on the transcribed sequence.</p>
+    <p class="mt-3">Note that the variant location can be visualized with the integrated <a href="https://www.nature.com/articles/nbt.1754" target="_blank" rel="noreferrer" class="text-blue-600">IGV</a> tool by clicking on the position column.</p>
+    <p class="mt-3">The tabular data can be downloaded by clicking on the Export button.</p>
+    <br>
+  
+    <h3 id="large-deletion" class="font-bold text-1xl">Large Deletion</h3>
+    <p class="mt-3"><img src="./static/images/13.targetdeletion.png" alt="tgld"></p>
+    <p><em>Figure 13: Large deletion page.</em></p>
+    <p class="mt-3">For four genes of interest, <em>pncA, katG, gid</em> and <em>ethA</em>, large deletion profile at gene level is estimated. These genes are known to be associated with drug resistance. The regions where at least consecutive 50 bps are sequenced with less than a certain threshold are protocolled. An example is depicted in Figure 13.</p>
+    <p class="mt-3">Note that the deletion location can be visualized with the integrated <a href="https://www.nature.com/articles/nbt.1754" target="_blank" rel="noreferrer" class="text-blue-600">IGV</a> tool by clicking on the position column.</p>
+    <p class="mt-3">The tabular data can be downloaded by clicking on the Export button.</p>
+    <br>
+  
+    <h3 id="rav" class="font-bold text-1xl">RAV</h3>
+    <p class="mt-3"><img src="./static/images/14.rav.png" alt="RAV"></p>
+    <p><em>Figure 14: RAV page</em></p>
+    <p class="mt-3">The RAV stands for <strong>Resistance-associated genes</strong> and is a subset of the variant regions listed in the <strong>Variants</strong> page. The variants selected in this section are the variants that induce drug-specific resistance.</p>
+    <p class="mt-3">As depicted in Figure 14, the general structure of the tabular view is an extension of the table in the <strong>Variants</strong> page. Refer to Figure 12 for direct comparison. The table shows the resistence against the 15 drugs of interest. Generally, the value in the table has to exceed a certain threshold to be identified as resistant to a specific drug.</p>
+    <p class="mt-3">The numbering scheme follows the 2021 WHO catalogue of Mycobacterium <em>tuberculosis</em> complex, described in <a href="https://doi.org/10.1016/S2666-5247(2100301-3)" target="_blank" rel="noreferrer" class="text-blue-600">Walker et al. (2022)</a>. Use the following table for further analysis.</p>
+    <table class="mt-3">
+      <thead>
+        <tr>
+          <th style="text-align: center">Group</th>
+          <th style="text-align: center">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align: center">1</td>
+          <td style="text-align: center">Associated with resistence</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">2</td>
+          <td style="text-align: center">Associated with resistance - interim</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">3</td>
+          <td style="text-align: center">Uncertain significance</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">4</td>
+          <td style="text-align: center">Not associated with resistance – interim</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">5</td>
+          <td style="text-align: center">Not associated with resistance</td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <p>The following table can be used to interpret each column header.</p>
+    <br>
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align: center">Drug</th>
+          <th style="text-align: center">Name</th>
+          <th style="text-align: center">Drug</th>
+          <th style="text-align: center">Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align: center">AMK</td>
+          <td style="text-align: center">Amikacin</td>
+          <td style="text-align: center">BDQ</td>
+          <td style="text-align: center">Bedaquiline</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">CAP</td>
+          <td style="text-align: center">Capreomycin</td>
+          <td style="text-align: center">CFZ</td>
+          <td style="text-align: center">Clofazimine</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">DLM</td>
+          <td style="text-align: center">Delamanid</td>
+          <td style="text-align: center">EMB</td>
+          <td style="text-align: center">Ethambutol</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">ETO</td>
+          <td style="text-align: center">Ethionamide</td>
+          <td style="text-align: center">INH</td>
+          <td style="text-align: center">Isoniazid</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">KAN</td>
+          <td style="text-align: center">Kanamycin</td>
+          <td style="text-align: center">LFX</td>
+          <td style="text-align: center">Levofloxacin</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">LZD</td>
+          <td style="text-align: center">Linezolid</td>
+          <td style="text-align: center">MFX</td>
+          <td style="text-align: center">Moxifloxacin</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">PZA</td>
+          <td style="text-align: center">Pyrazinamide</td>
+          <td style="text-align: center">RIF</td>
+          <td style="text-align: center">Rifampicin</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">STM</td>
+          <td style="text-align: center">Streptomycin</td>
+          <td style="text-align: center"></td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <p>Note that the variant location can be visualized with the integrated <a href="https://www.nature.com/articles/nbt.1754">IGV</a> tool by clicking on the position column.</p>
+    <p class="mt-3">The tabular data can be downloaded by clicking on the Export button.</p>
+    <br>
+    <h3 id="report" class="font-bold text-1xl">Report</h3>
+    <p class="mt-3">In the <strong>Report</strong> section, all analysis information can be viewed in the summarized format. The pdf version of the analysis can be downloaded by using the <strong>PDF Download</strong> button. The user can insert additional comments by using the <strong>Comment Edit</strong> button. Figure 15 depicts an example of a full report, and Figure 16 the edit section.</p>
+    <p class="mt-3"><img src="./static/images/15.Full_report.png" alt="full_rep"></p>
+    <p><em>Figure 15: Full report view.</em></p>
+    <br>
+  
+    <p><img src="./static/images/16.comment.png" alt="comments.png"></p>
+    <p><em>Figure 16: The comment edit section. The user can add extra comments in this block</em></p>
+    <br>
+  </section>
+
+
+
+
+{% endblock %} {% block scripts %} {% endblock %}

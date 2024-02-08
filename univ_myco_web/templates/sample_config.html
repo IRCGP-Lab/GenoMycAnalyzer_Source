@@ -1,0 +1,402 @@
+{% extends "base.html" %} {% block title %}
+<title>GenoMycAnalyzer</title>
+{% endblock %} {% block content %}
+
+<section class="py-5 px-7">
+  <div class="col-start-1 row-start-1 row-end-2 bg-white box group rounded-xl">
+    <div class="flex items-end justify-between w-auto h-auto space-y-1">
+      <div class="h-6 ml-2 font-bold w-30 item">
+        <span class="border bg-teal-600 px-0.5"></span>
+        <span class="ml-1">ANALYSIS OPTIONS </span>
+      </div>
+    </div>
+   
+
+    <form action="/samples/config" method="post" id="Form_config">
+      <div class="flex px-2 mt-2 mb-2 ml-2 mr-2 border-t border-gray-300"></div>
+      <div class="flex flex-row justify-between space-x-2">
+        <!-- Save Button -->
+        <div class="flex ml-2 space-x-2">
+          <button type="submit" class="rounded-xl h-8 px-5 pt-1.5 pb-2 bg-blue-600 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center"><span style="font-size: 16px" class="-mt-1 mr-2">&#128221;</span>SAVE</button>
+          <button type="button" id="bt_DeaultValue"  onclick="btDeaultValue()" class="rounded-xl h-8 px-5 pt-1.5 pb-2 bg-blue-600 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center"><span style="font-size: 16px" class="-mt-1 mr-2">&#128466;</span>Default</button>
+        </div>
+      </div>
+      <br />
+
+      <div class="grid gap-6 mb-6 ml-2 mr-2 md:grid-cols-2">
+        <div>
+          <label class="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"> Reads mapping to host genome (human) & Internal control</label>
+          <div class="flex items-center pl-4 border border-gray-200 rounded dark:border-gray-700">
+            <input id="ckReadmap" type="checkbox" value="1" name="ckReadmap" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" {% if ReadMapping_IntralControlOP=='True' %} checked {% endif %} />
+            <label class="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">On</label>
+          </div>
+        </div>
+      
+        <div class="grid gap-4 mb-0 ml-2 mr-2 md:grid-cols-1">
+          <div class="w-full">
+            <label for="refDB">User Add Drug Resistance DB</label>
+            <select name="refDB" id="refDB" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              {% for item in ReferenceDB %} {% if item == refDB %}
+              <option value="{{item}}" selected>{{item}}</option>
+              {% else %}
+              <option value="{{item}}">{{item}}</option>
+              {% endif %} {% endfor %}
+            </select>
+          </div>
+          <div class="grid gap-4 ml-2 mr-2 md:grid-cols-3">
+            <button type="button" id="bt_AddRefDb" name="bt_AddRefDb" onclick="inputfilename()" class="rounded-xl h-8 px-5 pt-1.5 pb-2 bg-blue-400 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center"><span style="font-size: 16px" class="-mt-1 mr-2">&#10133</span> ADD</button>
+            <button type="button" id="bt_DelRefDb" name="bt_DelRefDb" onclick="deletedbname()" class="rounded-xl h-8 px-5 pt-1.5 pb-2 bg-blue-400 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center"><span style="font-size: 16px" class="-mt-1 mr-2">&#10134</span> DEL</button>
+            <button type="button" id="bt_ExaRefDb" name="bt_ExaRefDb" onclick="userDbfiledownload()" class="rounded-xl h-8 px-5 pt-1.5 pb-2 bg-blue-400 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center"><span style="font-size: 16px" class="-mt-1 mr-2">&#128220</span> Example</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid gap-6 mb-6 ml-2 mr-2 md:grid-cols-4">
+        <div>
+          <label for="edKrakenQuality" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kraken2 minimum base quality (0~1)</label>
+          <input type="number" name="edKrakenQuality" id="edKrakenQuality" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0 ~ 1" min="0" max="1" required value="{{Kraken2_minbaseQulity}}" />
+        </div>
+
+        <div>
+          <label for="edKrakengroups" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kraken2 minimum hit groups (2~3)</label>
+          <input type="number" name="edKrakengroups" id="edKrakengroups" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="2 ~ 3" min="2" max="3" required value="{{Kraken2_minhitGroups}}" />
+        </div>
+
+        <div>
+          <label class="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Braken option -r (100~150)</label>
+          <input type="number" name="edBraken_r" id="edBraken_r" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="100 ~ 150" min="100" max="150" required value="{{Braken_OptionR}}" />
+        </div>
+        <div>
+          <!--
+          <label class="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Braken option -l</label>
+          <select name="cbBraken_l" id="cbBraken_l" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            {% for item in ["S","S1"] %} {% if item == Braken_OptionL %}
+            <option value="{{item}}" selected>{{item}}</option>
+            {% else %}
+            <option value="{{item}}">{{item}}</option>
+            {% endif %} {% endfor %}
+          </select>
+          -->
+        </div>
+      </div>
+
+      <div class="grid gap-6 mb-6 ml-2 mr-2 md:grid-cols-6">
+        <div>
+          <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Minimum mapping quality</label>
+          <label class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">Quality</label>
+        </div>
+        <div>
+          <label for="cbBcftoolsQc"><=, >=</label>
+          <select name="cbBcftoolsQc" id="cbBcftoolsQc" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            {% for item in ["<=",">="] %} {% if item == BcfToolsQualitySymbol %}
+            <option value="{{item}}" selected>{{item}}</option>
+            {% else %}
+            <option value="{{item}}">{{item}}</option>
+            {% endif %} {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="cbBcftoolsQcval" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Filter value</label>
+          <input type="number" name="cbBcftoolsQcval" id="cbBcftoolsQcval" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="10" required value="{{BcfToolsQualityValue}}" />
+        </div>
+
+        <div>
+          <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Minimum depth</label>
+          <label class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">DP</label>
+        </div>
+        <div>
+          <label for="cbBcftoolsDp"><=, >=</label>
+          <select name="cbBcftoolsDp" id="cbBcftoolsDp" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            {% for item in ["<=",">="] %} {% if item == BcfToolsDpSymbol %}
+            <option value="{{item}}" selected>{{item}}</option>
+            {% else %}
+            <option value="{{item}}">{{item}}</option>
+            {% endif %} {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="cbBcftoolsDpval" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Filter value</label>
+          <input type="number" name="cbBcftoolsDpval" id="cbBcftoolsDpval" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="10" required value="{{BcfToolsDpValue}}" />
+        </div>
+      </div>
+      <div class="grid gap-6 mb-6 ml-2 mr-2 md:grid-cols-2">
+        <div>
+          <label for="edSnpeff" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">SnpEff option (0~5000)</label>
+          <input type="number" name="edSnpeff" id="edSnpeff" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0 ~ 5000" min="0" max="5000" required value="{{SnpEff_ud}}" />
+        </div>
+        <div>
+          <label for="edVaf_dp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">VAF (1%~5%)</label>
+          <input type="number" name="edVaf_dp" id="edVaf_dp" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="1 ~ 5" min="1" max="5" required value="{{VAF_dp}}" />
+        </div>
+ 
+      </div>
+
+    </form>
+    <br /><br />
+  </div>
+
+
+  <!-- DB File Upload -->
+  <form action="/datafiles/dbsource/" enctype="multipart/form-data" method="post">
+    <input type="file" name="files" id="uploadfilename" onchange="fileUploadsend(this)" class="hidden" accept=".xlsx" />
+    <input type="submit" id="sendbutton" class="hidden" />
+  </form>
+
+  <!-- DB File Delete message box -->
+  <form id="form_delete_selectname" class="modal" action="" method="POST">
+    <div class="fixed inset-0 z-40 hidden bg-black opacity-40" id="mb_yesno-bg"></div>
+    <div id="mb_yesno" class="fixed z-50 hidden px-8 py-6 space-y-5 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md top-1/2 left-1/2 w-96 drop-shadow-lg">
+      <h1 class="text-2xl font-semibold">Confirm delete</h1>
+      <div class="py-5 border-t border-b border-gray-300">
+        <p>Are you sure you want to delete?</p>
+        <p id="lb_delete_datafile_name" class="mt-2 text-center text-red-800 bt-10"></p>
+      </div>
+      <div class="ml-1">
+        <!-- This button is used to close the dialog -->
+        <button href="" id="bt_deletefile_cancel" class="px-5 py-2 text-white bg-indigo-500 rounded-md cursor-pointer hover:bg-indigo-700" onclick="toggcleModal('mb_yesno')">Cancel</button>
+        <button href="" id="bt_deletefile_yes" class="px-5 py-2 ml-2 text-white bg-red-500 rounded-md cursor-pointer hover:bg-indigo-700">Yes</button>
+      </div>
+    </div>
+  </form>  
+</section> 
+
+
+{% endblock %} {% block scripts %}
+
+<script type="text/javascript">
+
+  // 버튼 클릭시 선택된 DB 삭제(기본 DB 예외)
+  $("#bt_DelRefDb").click(function () {
+    var j = 0;
+    var sidArr = "";
+    var idArr = new Array(); // 배열 선언
+    /*
+    const cboxs = document.getElementsByName("refDB");
+
+    for (let i = 0; i < cboxs.length; i++) {
+      if (cboxs[i].checked) {
+        idArr[j] = cboxs[i].parentElement.parentElement.children[1].textContent;
+        j++;
+      }
+    }
+    */
+    const selcb = document.getElementById("refDB").options[document.getElementById("refDB").selectedIndex].value
+    //debugger;
+    if (selcb != '') {
+      $("#lb_delete_datafile_name").text("DB Name: " + selcb); // 메세지 확인용
+      $("#mb_yesno").removeClass("hidden");
+      $("#mb_yesno-bg").removeClass("hidden");
+    }
+  });
+ 
+  $("#bt_deletefile_yes").click(function () {
+    var j = 0;
+    var idArr = new Array(); // 배열 선언
+
+    const selcb = document.getElementById("refDB").options[document.getElementById("refDB").selectedIndex].value
+
+    toggcleModal("mb_yesno");
+    if (selcb != "") {
+      var f = document.createElement("form"); // form 엘리멘트 생성
+      f.setAttribute("id", "userdbdelete"); // method 속성을 id 설정
+      f.setAttribute("method", "post"); // method 속성을 post로 설정
+      f.setAttribute("action", "/datafiles/dbdelete"); // submit했을 때 무슨 동작을 할 것인지 설정
+      document.body.appendChild(f); // 현재 페이지에 form 엘리멘트 추가
+      //debugger;
+      var val = document.createElement("input"); // input 엘리멘트 생성
+      val.setAttribute("type", "text"); // type 속성을 text으로 설정
+      val.setAttribute("class", "hidden"); // type 속성을 hidden으로 설정
+      val.setAttribute("id", "dbname"); // name 속성을 'sampleid'으로 설정
+      val.setAttribute("name", "dbname"); // name 속성을 'sampleid'으로 설정
+      val.setAttribute("onsubmit", "return false");
+      val.setAttribute("value", selcb); // value 속성을 neilong에 담겨있는 값으로 설정
+      f.appendChild(val); // form 엘리멘트에 input 엘리멘트 추가
+
+      f.submit(); // form 태그 서브밋 실행
+    }
+  });
+
+  function toggcleModal(modalid) {
+    event.preventDefault();
+
+    console.log("func:" + modalid);
+    document.getElementById(modalid).classList.toggle("hidden");
+    document.getElementById(modalid + "-bg").classList.toggle("hidden");
+  }
+
+  function fileUploadsend(fis) {
+    var str = fis.value;
+    document.getElementById("sendbutton").click();
+  }
+
+  function inputfilename() {
+    document.getElementById("uploadfilename").click();
+  }
+  
+  function btDeaultValue() {
+    document.getElementById("ckReadmap").checked = false;
+    $("#edKrakenQuality").val(1);
+    $("#edKrakengroups").val(3);
+    $("#edBraken_r").val(100);
+    document.getElementById("cbBcftoolsQc").options[0].selected = true
+
+    $("#cbBcftoolsQcval").val(30);
+    document.getElementById("cbBcftoolsDp").options[0].selected = true
+    $("#cbBcftoolsDpval").val(5);
+
+    $("#edSnpeff").val(1000);
+    $("#edVaf_dp").val(3);
+  /*    
+    <input id="" 
+
+    <input type="number" name="edKrakenQuality" id="edKrakenQuality" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0 ~ 1" min="0" max="1" required value="{{Kraken2_minbaseQulity}}" />
+    <input type="number" name="edKrakengroups" id="edKrakengroups" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="2 ~ 3" min="2" max="3" required value="{{Kraken2_minhitGroups}}" />
+    <input type="number" name="edBraken_r" id="edBraken_r" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="100 ~ 150" min="100" max="150" required value="{{Braken_OptionR}}" />
+
+    <label for="cbBcftoolsQc"><=, >=</label>
+    <select name="cbBcftoolsQc" id="cbBcftoolsQc" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+      {% for item in ["<=",">="] %} {% if item == BcfToolsQualitySymbol %}
+      <option value="{{item}}" selected>{{item}}</option>
+      {% else %}
+      <option value="{{item}}">{{item}}</option>
+      {% endif %} {% endfor %}
+    </select>
+    <input type="number" name="cbBcftoolsQcval" id="cbBcftoolsQcval" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="10" required value="{{BcfToolsQualityValue}}" />
+
+    <label for="cbBcftoolsDp"><=, >=</label>
+    <select name="cbBcftoolsDp" id="cbBcftoolsDp" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+      {% for item in ["<=",">="] %} {% if item == BcfToolsDpSymbol %}
+      <option value="{{item}}" selected>{{item}}</option>
+      {% else %}
+      <option value="{{item}}">{{item}}</option>
+      {% endif %} {% endfor %}
+    </select>
+
+    <input type="number" name="cbBcftoolsDpval" id="cbBcftoolsDpval" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="10" required value="{{BcfToolsDpValue}}" />
+    <input type="number" name="edSnpeff" id="edSnpeff" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0 ~ 5000" min="0" max="5000" required value="{{SnpEff_ud}}" />
+    <input type="number" name="edVaf_dp" id="edVaf_dp" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="1 ~ 5" min="1" max="5" required value="{{VAF_dp}}" />
+*/
+
+
+
+
+  }
+
+  function deletedbname() {
+    var j = 0;
+    var idArr = new Array(); // 배열 선언
+    const ref = document.getElementById("refDB")
+
+    if(ref.selectedIndex >= 0){
+//      debugger;
+      const dbname = ref.options[ref.selectedIndex].text;
+
+      toggcleModal("mb_yesno");
+      if (txt != "") {
+        var f = document.createElement("form"); // form 엘리멘트 생성
+        f.setAttribute("id", "dbdeletemessge"); // method 속성을 id 설정
+        f.setAttribute("method", "post"); // method 속성을 post로 설정
+        f.setAttribute("action", "/datafiles/dbdelete"); // submit했을 때 무슨 동작을 할 것인지 설정
+        document.body.appendChild(f); // 현재 페이지에 form 엘리멘트 추가
+        var val = document.createElement("input"); 
+        val.setAttribute("type", "text"); 
+        val.setAttribute("class", "hidden");
+        val.setAttribute("id", "dbname"); 
+        val.setAttribute("name", "dbname");
+        val.setAttribute("value", dbname); 
+        f.appendChild(val); // form 엘리멘트에 input 엘리멘트 추가
+        f.submit(); // form 태그 서브밋 실행
+      }
+    }
+  }
+
+  function userDbfiledownload() {
+    var element = document.createElement('a');
+    element.setAttribute('href','/static/UserDB_example.xlsx');
+    element.setAttribute('download','UserDB_example.xlsx');
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  }
+  
+  function closeAlert(event) {
+    let element = event.target;
+    while (element.nodeName !== "BUTTON") {
+      element = element.parentNode;
+    }
+    element.parentNode.parentNode.removeChild(element.parentNode);
+  }
+
+  var uploadStatus = {
+    total: 0,
+    count: 0,
+  };
+
+  function FastQLoadFiles() {
+    const btFile = document.getElementById("multiple_files");
+    const files = Array.from(btFile.files);
+
+    uploadStatus["total"] = files.length;
+    uploadStatus["count"] = 0;
+    console.log("List : ", uploadStatus["total"], "/", uploadStatus["count"]);
+
+    if (files.length > 0) uploadFile();
+  }
+
+  function uploadFile() {
+    // get the file
+    //debugger;
+    let file = document.getElementById("multiple_files").files[uploadStatus["count"]];
+    uploadStatus["count"] = uploadStatus["count"] + 1;
+
+    var notot = uploadStatus["count"];
+    var cnttot = document.getElementById("multiple_files").files.length;
+
+    var percent = (notot / cnttot) * 100;
+
+    //print file details
+    console.log("File Name : ", file.name);
+    console.log("File size : ", file.size);
+    console.log("File type : ", file.type);
+
+    $("#lb_uploadfile").text(file.name);
+    //$("#pb_upload").style.text("width:0%")
+    $("#pb_upload").style = "width:0%";
+
+    $("#pb_upload").text("0%");
+    //$("#pb_totupload").style.text("width:"+percent+"%")
+    $("#pb_totupload").style = "width:" + parseInt(percent) + "%";
+
+    $("#pb_totupload").text(percent + "%");
+    // create form data to send via XHR request
+    var formdata = new FormData();
+    formdata.append("file1", file);
+
+    //create XHR object to send request
+    var ajax = new XMLHttpRequest();
+
+    // add progress event to find the progress of file upload
+    ajax.upload.addEventListener("progress", progressHandler);
+
+    // initializes a newly-created request
+    ajax.open("POST", "/datafiles/upload/"); // replace with your file URL
+
+    // send request to the server
+    ajax.send(formdata);
+
+    // if((uploadStatus['count']+1) < uploadStatus['total'])
+    //uploadFile()
+  }
+
+  function progressHandler(ev) {
+    let totalSize = ev.total; // total size of the file in bytes
+    let loadedSize = ev.loaded; // loaded size of the file in bytes
+
+    // calculate percentage
+    var percent = (ev.loaded / ev.total) * 100;
+    //document.getElementById("pb_upload").style.width = ("width:"+percent+"%");
+    $("#pb_upload").style = parseInt(percent) + "%";
+    $("#pb_upload").text = parseInt(percent) + "%";
+  }
+</script>
+{% endblock %}

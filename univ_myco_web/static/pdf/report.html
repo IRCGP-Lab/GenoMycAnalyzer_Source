@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MycoAnalyzer</title>
+</head>
+
+<body>
+    <section class="bg-slate-100">
+        <div class="col-start-1 row-start-1 row-end-2 p-2 bg-white box group rounded-xl">
+            <div class="WordSection1 flex justify-center" style="font-family: 'Arial', sans-serif; color: #374151">
+                <div align="self-auto">
+                    <div>
+                        <p class="MsoNormal" style="text-align: center; width: 720pt"><b><span lang="EN-US" style="font-size: 20pt; font-family: 'Arial', sans-serif">Analysis Report</span></b></p>
+                        <br>
+                        <p class="MsoNormal"><b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Sample Details</span></b></p>
+                        <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" style="width: 749pt; border-collapse: collapse">
+                            <tr style="height: 25.00pt">
+                                <td style="width: 135.85pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Patient ID</td>
+                                <td style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{PatientID}}</td>
+                                <td style="width: 144.9pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Patient name</td>
+                                <td style="width: 241.4pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{PatientName}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 135.85pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Sample ID</td>
+                                <td style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{DataID}}</td>
+                                <td style="width: 144.9pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Sample Received Date</td>
+                                <td style="width: 241.4pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{RecvDate}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 135.85pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Sample Source</td>
+                                <td style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{Source}}</td>
+                                <td style="width: 144.9pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Library Prep Date</td>
+                                <td style="width: 241.4pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{LibPrepDate}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 135.85pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Culture Type</td>
+                                <td style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{CultureType}}</td>
+                                <td style="width: 144.9pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Sequencing Date</td>
+                                <td style="width: 241.4pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{SeqDate}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 135.85pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center"></td>
+                                <td style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt"></td>
+                                <td style="width: 144.9pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Report Date</td>
+                                <td style="width: 241.4pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{ReportDate}}</td>
+                            </tr>
+                        </table>
+                        <br>
+
+                        <p class="MsoNormal"><b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Assay Details</span></b></p>
+
+                        <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" style="width: 749pt; border-collapse: collapse">
+                            <tr style="height: 25.00pt">
+                                <td style="width: 130pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Sequencer</td>
+                                <td style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{Sequencer}}</td>
+                                <td style="width: 144.9pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Method</td>
+                                <td style="width: 241.4pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{Method}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 130pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Pipeline</td>
+                                <td style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{Pipeline}}</td>
+                                <td style="width: 144.9pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Reference</td>
+                                <td style="width: 241.4pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">H37Rv (NC_000962.3)</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 135.85pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Quality Control</td>
+                                <td colspan="3" style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{QualityControl}}</td>
+                            </tr>
+                        </table>
+                        <br>
+
+                        <p class="MsoNormal"><b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Species Identification</span></b></p>
+
+                        <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" style="width: 749pt; border-collapse: collapse">
+                            <tr style="height: 25.00pt">
+                                <td style="width: 130pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Species (%)</td>
+                                <td colspan="3" style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt"><i>{{Species}}</i></td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 130pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Lineage*</td>
+                                <td colspan="3" style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{Lineage}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 130pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Spoligotype*</td>
+                                <td colspan="3" style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{Spligotype}}</td>
+                            </tr>
+                        </table>
+                        <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">*Lineage and spoligotype are only reported for <i>Mycobacterium tuberculosis</i> complex.</span></p>
+                        <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">The lineage was estimated based SNPs reported by Napier et al. [Genome Med. 2020;12(1):114]</span></p>
+                        <br>
+
+                        <p class="MsoNormal"><b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Molecular Drug Susceptibility Test</span></b></p>
+
+
+                        <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" style="width: 749pt; border-collapse: collapse">
+                            <tr style="height: 25.00pt">
+                                <td style="width: 80pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Class</td>
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Drug</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Gene Target* (AA change, VAF, Group)</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Large deletion</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Result</td>
+                            </tr>
+
+                            <tr style="height: 25.00pt">
+                                <td rowspan="4" style="width: 80pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">1st-line drugs</td>
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">ISONIAZID (INH)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in INHGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{INHComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{INHResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">RIFAMPICIN (RIF)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in RIFGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{RIFComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{RIFResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">ETHAMBUTOL (EMB)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in EMBGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{EMBComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{EMBResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">PYRAZINAMIDE (PZA)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in PZAGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{PZAComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{PZAResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td rowspan="4" style="width: 80pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">2st-line drugs (group A)</td>
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">LEVOFLOXACIN (LFX)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in LFXGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{LFXComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{LFXResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">MOXIFLOXACIN (MFX)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in MFXGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{MFXComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{MFXResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">LINEZOLID (LZD)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in LZDGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{LZDComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{LZDResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">BEDAQUILINE (BDQ)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in BDQGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{BDQComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{BDQResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 80pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">2st-line drugs (group B)</td>
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">CLOFAZIMINE (CFZ)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in CFZGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{CFZComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{CFZResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td rowspan="6" style="width: 80pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">2st-line drugs (group C)</td>
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">DELAMANID (DLM)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in DLMGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{DLMComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{DLMResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">AMIKACIN (AMK)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in AMKGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{AMKComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{AMKResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">CAPREOMYCIN (CAP)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in CAPGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{CAPComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{CAPResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">KANAMYCIN (KAN)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in KANGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{KANComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{KANResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">STREPTOMYCIN (STM)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in STMGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{STMComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{STMResult}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 145pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">ETHIONAMIDE (ETO)</td>
+                                <td style="width: 265pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{% for lt in ETOGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</td>
+                                <td style="width: 140pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{ETOComment}}</td>
+                                <td style="width: 84pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">{{ETOResult}}</td>
+                            </tr>
+                        </table>
+
+                        <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">*The target genes for resistance mutations were derived from the ‘Catalogue of mutations in&nbsp;&nbsp;<i>Mycobacterium tuberculosis</i> complex and their</span></p>
+                        <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">association with drug resistance’. (2021, World Health Organization; Lancet Microbe. 2022;3(4):e265)</span></p>
+                        <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">Resistance (R) is reported when mutations are detected in either group 1 or group 2.</span></p>
+                        <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">AA change, amino acids change; VAF, variant allele frequency</span></p>
+                        <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">&nbsp;</span></p>
+                        <br>
+                        <p class="MsoNormal"><b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Final Result</span></b></p>
+                        <!--
+                        <textarea readonly valign="top" style="width: 732pt; border: solid windowtext 1pt; padding: 0cm 5.4pt 0cm 5.4pt; height: 98.3pt">{{FinalResult}}</textarea>
+                        -->
+                        <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="992" style="width: 743.8pt; border-collapse: collapse">
+                            <tr style="height: 98pt" valign="top">
+                                <td style="border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt;">
+                                    <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">
+                                            {% for lt in FinalResult %}
+                                            {% if(lt == '___I___') %}
+                                            <i>
+                                                {% elif(lt == '___II___') %}
+                                            </i>
+                                            {% elif(lt == '___N___') %}
+                                            </br>
+                                            {% else %} {{lt}}
+                                            {% endif %}
+                                            {% endfor %}</p>
+                                    </span></p>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <br><br>
+                        <p class="MsoNormal"><b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Additional Comment</span></b></p>
+                        <textarea readonly valign="top" style="width: 732pt; border: solid windowtext 1pt; padding: 0cm 5.4pt 0cm 5.4pt; height: 98.3pt">{{AdditionalComment}}</textarea>
+
+                        <br><br>
+                        <p class="MsoNormal"><b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Authorized By</span></b></p>
+
+
+                        <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" style="width: 743.8pt; border-collapse: collapse">
+                            <tr style="height: 25.00pt">
+                                <td rowspan="2" style="width: 130pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Reporting Laboratory</td>
+                                <td rowspan="2" style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{ReportLab}}</td>
+                                <td style="width: 130pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Doctor`s Name</td>
+                                <td colspan="3" style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{DoctorName}}</td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 130pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Signature</td>
+                                <td style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt"></td>
+                            </tr>
+                            <tr style="height: 25.00pt">
+                                <td style="width: 130pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; text-align: center">Address</td>
+                                <td colspan="3" style="width: 221.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt">{{Spligotype}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

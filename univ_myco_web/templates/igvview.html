@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<meta name="Access-Control-Allow-Origin" content="*">
+	
+    <link rel="shortcut icon" href="https://igv.org/web/img/favicon.ico">
+    <title>igv.js</title>
+</head>
+
+<body>
+
+
+<div id="igv-div" style="padding-top: 10px;padding-bottom: 10px; border:1px solid lightgray"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/igv@2.15.5/dist/igv.min.js"></script>
+<script type="text/javascript">
+	
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var igvDiv = document.getElementById("igv-div");
+        var options =
+        {
+            reference: {
+				id: "myCustomGenome",
+                cytobandURL: "/datafiles/ref/cytoBand.txt",
+				fastaURL: "{{fastaurl}}",
+                indexURL: "{{fastaindexurl}}",
+                wholeGenomeView: false
+            },
+            locus: "{{datalocus}}",
+		tracks: [
+				{
+                    name: "MTB_H37Rv_Gene_Anno_NC_000962.3",
+                    type: "annotation",
+                    format: "bed",
+                    url:"{{refurl}}"
+                },
+		        {
+                    name: "{{sampleid}}",
+                    url:"{{dataurl}}",
+				    indexURL:"{{dataurlindex}}",
+                    color: "rgb(185,185,185)",
+                    type: "alignment",
+                    format: "bam"
+				}
+            ]
+        };
+
+        igv.createBrowser(igvDiv, options)
+                .then(function (browser) {
+                    console.log("Created IGV browser");
+                })
+    });
+</script>
+</body>
+</html>

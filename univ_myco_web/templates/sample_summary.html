@@ -1,0 +1,796 @@
+
+
+{% extends "base.html" %}
+
+
+{% block title %}
+  <title>GenoMycAnalyzer</title>
+{% endblock %}
+
+{% block content %}
+
+<section class="bg-slate-100">
+    <nav class="flex flex-wrap items-center justify-between p-2 bg-white teal-100">
+    <div class="flex-grow block w-full lg:flex lg:w-auto lg:items-center">
+        <div class="text-sm lg:flex-grow">
+        <a href="/samples/summary/{{SampleID}}" class="block mt-4 ml-4 text-orange-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Summary </a>
+        <a href="/samples/statistics/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Statistics&QC </a>
+        <a href="/samples/variants/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Variants </a>
+        <a href="/samples/genedeletion/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block">Large deletion</a>
+        <a href="/samples/rav/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> RAV </a>
+        <a href="/samples/report/{{SampleID}}" class="block mt-4 ml-6 text-teal-700 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Report </a>
+        </div>
+    </div>
+    </nav>
+    <div class="h-0.5 bg-gradient-to-r from-cyan-200 to-blue-300"></div>
+
+    <div class="grid grid-flow-row grid-cols-3 grid-rows-3 gap-1 mt-1 ml-1 mr-1 overflow-hidden">
+    <!-- Sample info page -->
+
+    <!--<div class="box row-start-1 row-end-1 col-start-1 group h-[14rem] rounded-xl bg-slate-50 p-2">-->
+    <div class="col-start-1 row-start-1 row-end-1 p-2 bg-white box group rounded-xl">
+        <div class="flex items-end justify-between w-auto h-auto space-y-1">
+        <div class="h-6 ml-2 font-bold w-30 item">
+            <span class="border bg-teal-600 px-0.5"></span>
+            <span class="ml-1">Sample Info</span>
+            <input type="text" id="summary_sampleID" class="hidden" value="{{SampleID}}">
+            <input type="text" id="summary_sampledataID" class="hidden" value="{{sampledataID}}">
+            <input type="text" id="summary_patientID" class="hidden" value="{{patientID}}">
+            <input type="text" id="summary_patientName" class="hidden" value="{{patientName}}">
+            <input type="text" id="summary_sampleSource" class="hidden" value="{{sampleSource}}">
+            <input type="text" id="summary_cultureType" class="hidden" value="{{cultureType}}">
+            <input type="text" id="summary_recvDate" class="hidden" value="{{recvDate}}">
+            <input type="text" id="summary_labprepDate" class="hidden" value="{{labprepDate}}">
+            <input type="text" id="summary_seqDate" class="hidden" value="{{seqDate}}">
+            <input type="text" id="summary_reportDate" class="hidden" value="{{reportDate}}">
+            <input type="text" id="summary_r1name" class="hidden" value="{{r1name}}">
+            <input type="text" id="summary_r2name" class="hidden" value="{{r2name}}">
+            <input type="text" id="summary_sequencer" class="hidden" value="{{sequencer}}">
+            <input type="text" id="summary_method" class="hidden" value="{{method}}">
+            <input type="text" id="summary_pipeline" class="hidden" value="{{pipeline}}">
+            <input type="text" id="summary_drName" class="hidden" value="{{drName}}">
+            <input type="text" id="summary_reportLab" class="hidden" value="{{reportLab}}">
+            <input type="text" id="summary_address" class="hidden" value="{{address}}">
+        </div>
+
+        <button id="bt_sample_edit_show" class="px-4 mr-2 text-gray-500 border rounded border-stone-400 hover:border-transparent hover:bg-sky-200 hover:text-teal-700 lg:mt-0">Edit</button>
+        </div>
+        <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+        <!-- Sample info -->
+        <section class="text-gray-600 body-font">
+        <div class="flex items-end justify-between w-auto py-1 mx-2">
+            <span>Sample ID: {{sampledataID}}</span>
+            <span>Patient ID: {{patientID}}</span>
+        </div>
+        </section>
+        <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+        <span class="ml-2 text-gray-500 body-font">Sequencing data</span>
+
+        <section class="mt-2 text-gray-600 body-font">
+        <div class="flex items-end justify-between w-auto py-1 mx-2">
+            <span>{{r1name}}</span>
+            <span>{{r1size}}</span>
+        </div>
+        <div class="flex items-end justify-between w-auto py-1 mx-2">
+            <span>{{r2name}}</span>
+            <span>{{r2size}}</span>
+        </div>
+        </section>
+    </div>
+    <!-- Analysis summary Page -->
+    <div class="col-start-2 row-start-1 row-end-4 p-2 mb-1 bg-white box group rounded-xl">
+        <div class="flex items-end justify-between w-auto h-auto space-y-1">
+            <div class="h-6 ml-2 font-bold w-30 item">
+                <span class="border bg-teal-600 px-0.5"></span>
+                <span class="ml-1">Analysis summary</span>
+            </div>
+        </div>
+        <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+
+            <section class="mt-2 ml-2 text-sm text-gray-600 body-font">
+                <div>Quality control: {{Qcontrol}}</div>
+                <div>Species identification: <i>{{Mycobac}}</i></div>
+                <div><i>M. tuberculosis</i> lineage: {{Lineage}}</div>
+                <div>Spoligotype: {{Spoligotype}}</div>
+            </section>
+
+        <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+
+        <!-- Circos plot -->
+        <div class="h-6 ml-2 font-bold w-30 item">
+            <span class="border bg-teal-600 px-0.5"></span>
+            <span class="ml-1">Circos plot</span>
+        </div>
+        <section class="mt-2 ml-2 text-sm text-gray-600 body-font">
+            <CENTER>
+                <a href="/samples/summary/{{SampleID}}/circos">
+                    <img src="/static/circos/{{SampleID}}.jpg?{{timenow}}" alt="Circos plot">
+                </a>
+            </CENTER>
+        </section>
+    </div>
+
+    <!-- Molecular drug Susceptibility Testing Page -->
+    <div class="col-start-3 row-start-1 row-end-4 p-2 mb-1 bg-white box group rounded-xl">
+        <div class="flex items-end justify-between w-auto h-auto space-y-1">
+            <div class="h-6 ml-2 font-bold w-30 item">
+                <span class="border bg-teal-600 px-0.5"></span>
+                <span class="ml-1">Genotypic drug susceptibility testing</span>
+            </div>
+        </div>
+        <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+        <!-- Drug circle box -->
+
+        <div class="flex items-end justify-between ml-5 mr-5 space-y-1">
+            {% if(dr_amk == 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">AMK</div>
+            {% elif(dr_amk == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">AMK</div>
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">AMK</div>
+            {% endif %}
+
+            {% if(dr_bdq == 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">BDQ</div>
+            {% elif(dr_bdq == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">BDQ</div>
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">BDQ</div>
+            {% endif %}
+
+            {% if(dr_cap== 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">CAP</div>
+            {% elif(dr_cap == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">CAP</div>
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">CAP</div>
+            {% endif %}
+
+            {% if(dr_cfz == 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">CFZ</div>
+            {% elif(dr_cfz == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">CFZ</div>                
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">CFZ</div>
+            {% endif %}
+
+            {% if(dr_dlm == 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">DLM</div>
+            {% elif(dr_dlm == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">DLM</div>                
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">DLM</div>
+            {% endif %}
+
+            {% if(dr_emb== 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">EMB</div>
+            {% elif(dr_emb == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">EMB</div>
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">EMB</div>
+            {% endif %}
+
+            {% if(dr_eto == 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">ETO</div>
+            {% elif(dr_eto == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">ETO</div>
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">ETO</div>
+            {% endif %}
+
+            {% if(dr_inh == 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">INH</div>
+            {% elif(dr_inh == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">INH</div>                
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">INH</div>
+            {% endif %}
+            
+        </div>
+        <div class="flex items-end justify-between ml-5 mr-5 space-y-1">
+            {% if(dr_kan == 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">KAN</div>
+            {% elif(dr_kan == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">KAN</div>                
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">KAN</div>
+            {% endif %}
+            {% if(dr_lfx == 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">LFX</div>
+            {% elif(dr_lfx == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">LFX</div>                
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">LFX</div>
+            {% endif %}
+            {% if(dr_lzd == 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">LZD</div>
+            {% elif(dr_lzd == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">LZD</div>                
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">LZD</div>
+            {% endif %}
+            {% if(dr_mfx == 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">MFX</div>
+            {% elif(dr_mfx == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">MFX</div>                
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">MFX</div>
+            {% endif %}
+            {% if(dr_pza == 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">PZA</div>
+            {% elif(dr_pza == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">PZA</div>                
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">PZA</div>
+            {% endif %}
+            {% if(dr_rif == 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">RIF</div>
+            {% elif(dr_rif == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">RIF</div>                
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">RIF</div>
+            {% endif %}
+            {% if(dr_stm == 1) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-red-500 rounded-full h-9">STM</div>
+            {% elif(dr_stm == 2) %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-gray-500 rounded-full h-9">STM</div>                
+            {% else %}
+                <div class="flex items-center justify-center w-10 text-sm text-white bg-green-500 rounded-full h-9">STM</div>
+            {% endif %}
+
+        <div class="flex items-center justify-center w-10 h-9"></div>
+        </div>
+        <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+
+        <!-- Drug document box -->
+        <table class="w-full text-sm text-center text-gray-900 bg-white border-separate shadow-none">
+        <thead>
+            <tr>
+            <th class="w-1/6 p-1 text-white bg-blue-500">Drug</th>
+            <th class="p-1 text-white bg-blue-500">Name</th>
+            <th class="w-1/6 p-1 text-white bg-blue-500">Drug</th>
+            <th class="w-auto p-1 text-white bg-blue-500">Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">AMK</td>
+            <td class="p-1">Amikacin</td>
+            <td class="p-1">BDQ</td>
+            <td class="p-1">Bedaquiline</td>
+            </tr>
+            <tr class="text-blue-900 bg-blue-100">
+            <td class="p-1">CAP</td>
+            <td class="p-1">Capreomycin</td>
+            <td class="p-1">CFZ</td>
+            <td class="p-1">Clofazimine</td>
+            </tr>
+            <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">DLM</td>
+            <td class="p-1">Delamanid</td>
+            <td class="p-1">EMB</td>
+            <td class="p-1">Ethambutol</td>
+            </tr>
+            <tr class="text-blue-900 bg-blue-100">
+            <td class="p-1">ETO</td>
+            <td class="p-1">Ethionamide</td>
+            <td class="p-1">INH</td>
+            <td class="p-1">Isoniazid</td>
+            </tr>
+            <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">KAN</td>
+            <td class="p-1">Kanamycin</td>
+            <td class="p-1">LFX</td>
+            <td class="p-1">Levofloxacin</td>
+            </tr>
+            <tr class="text-blue-900 bg-blue-100">
+            <td class="p-1">LZD</td>
+            <td class="p-1">Linezolid</td>
+            <td class="p-1">MFX</td>
+            <td class="p-1">Moxifloxacin</td>
+            </tr>
+            <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">PZA</td>
+            <td class="p-1">Pyrazinamide</td>
+            <td class="p-1">RIF</td>
+            <td class="p-1">Rifampicin</td>
+            </tr>
+            <tr class="text-blue-900 bg-blue-100">
+            <td class="p-1">STM</td>
+            <td class="p-1">Streptomycin</td>
+            <td class="p-1"></td>
+            <td class="p-1"></td>
+            </tr>
+        </tbody>
+        </table>
+        <div class="flex items-end justify-between mt-2 ml-5 mr-5 space-y-1 ">
+            <DIV>
+                <span style="height: 12px;width: 12px; background-color: #22C55E; border-radius: 50%;display: inline-block;"></span> Susceptible&nbsp;&nbsp;
+                <span style="height: 12px;width: 12px; background-color: #EF4444; border-radius: 50%;display: inline-block;"></span> Resistant
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis report page -->
+    <div class="col-start-1 row-start-4 row-end-2 p-2 mb-1 bg-white box group rounded-xl">
+        <div class="flex items-end justify-between w-auto h-auto space-y-1">
+            <div class="h-6 ml-2 font-bold w-30 item">
+                <span class="border bg-teal-600 px-0.5"></span>
+                <span class="ml-1">Analysis report</span>
+            </div>
+        </div>
+        <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+
+        <!-- Analysis process step -->
+        <div class="text-sm mb-2 bg-green-100 rounded-full shadow" role="alert">
+            <div class="flex p-2 items-center justify-center ">
+                <div class="flex items-center justify-center w-[20rem] text-black bg-green-100 rounded-full h-6">Status: {{stepstr}}</div>
+            </div>
+        </div>
+        {% if stepno in [1,2] %}
+        <div class="text-sm bg-white rounded-full shadow" role="alert">
+            <div class="flex p-2">
+                <div class="flex items-center justify-center w-24 text-white bg-green-500 rounded-full h-8">Standby</div>
+            </div>
+        </div>
+        {% elif stepno in [6] %}
+        <div class="text-sm bg-white rounded-full shadow" role="alert">
+            <div class="flex p-2">
+                <div class="flex items-center justify-center w-24 text-white bg-green-500 rounded-full h-8">Cancelled</div>
+                <div class="pl-2 text-gray-600">
+                    <p class="-mt-2 font-bold">Analysis error</p>
+                    <p class="-mb-2">{{stime1}}</p>
+                </div>
+            </div>
+        </div>
+        {% elif stepno in [10] %}
+        <div class="text-sm bg-white rounded-full shadow" role="alert">
+            <div class="flex p-2">
+                <div class="flex items-center justify-center w-24 text-white bg-green-500 rounded-full h-8">Running</div>
+                <div class="pl-2 text-gray-600">
+                    <p class="-mt-2 font-bold">Preprocessing</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if stepno in [20,30,40,50,99] %}
+        <div class="text-sm bg-white rounded-full shadow" role="alert">
+            <div class="flex p-2">
+                <div class="flex items-center justify-center w-24 text-white bg-green-500 rounded-full h-8">Completed</div>
+                <div class="pl-2 text-gray-600">
+                    <p class="-mt-2 font-bold">Preprocessing</p>
+                    <p class="-mb-2">{{stime1}}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if stepno==20 %}
+        <div class="text-sm bg-white rounded-full shadow" role="alert">
+            <div class="flex p-2">
+                <div class="flex items-center justify-center w-24 text-white bg-green-500 rounded-full h-8">Running</div>
+                <div class="pl-2 text-gray-600">
+                    <p class="-mt-2 font-bold">Species identification</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if stepno in [30,40,50,99] %}
+        <div class="mt-2 text-sm bg-white rounded-full shadow" role="alert">
+            <div class="flex p-2">
+                <div class="flex items-center justify-center w-24 text-white bg-green-500 rounded-full h-8">Completed</div>
+                <div class="pl-2 text-gray-600">
+                    <p class="-mt-2 font-bold">Species identification</p>
+                    <p class="-mb-2">{{stime2}}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if (stepno==30) %}
+        <div class="mt-2 text-sm bg-white rounded-full shadow" role="alert">
+            <div class="flex p-2">
+                <div class="flex items-center justify-center w-24 text-white bg-green-500 rounded-full h-8">Running</div>
+                <div class="pl-2 text-gray-600">
+                    <p class="-mt-2 font-bold">Variants detection</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if stepno in [40,50,99] %}
+        <div class="mt-2 text-sm bg-white rounded-full shadow" role="alert">
+            <div class="flex p-2">
+                <div class="flex items-center justify-center w-24 text-white bg-green-500 rounded-full h-8">Completed</div>
+                <div class="pl-2 text-gray-600">
+                    <p class="-mt-2 font-bold">Variants detection</p>
+                    <p class="-mb-2">{{stime3}}</p>
+                </div>
+            </div>
+        </div>            
+        {% endif %}
+        {% if (stepno==40) %}
+        <div class="mt-2 text-sm bg-white rounded-full shadow" role="alert">
+            <div class="flex p-2">
+                <div class="flex items-center justify-center w-24 text-white bg-green-500 rounded-full h-8">Running</div>
+                <div class="pl-2 text-gray-600">
+                    <p class="-mt-2 font-bold">Variant annotation and Prediction of</p>
+                    <p class="-mt-2 font-bold">drug susceptibility</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if stepno in [50,99] %}
+        <div class="mt-2 text-sm bg-white rounded-full shadow" role="alert">
+            <div class="flex p-2">
+                <div class="flex items-center justify-center w-24 text-white bg-green-500 rounded-full h-8">Completed</div>
+                <div class="pl-2 text-gray-600">
+                <p class="-mt-2 font-bold">Variant annotation and Prediction of</p>
+                    <p class="-mt-2 font-bold">drug susceptibility</p>
+                    <p class="-mb-2">{{stime4}}</p>
+                </div>
+            </div>
+        </div>         
+        {% endif %}
+        {% if (stepno==50) %}
+            <div class="mt-2 text-sm bg-white rounded-full shadow" role="alert">
+            <div class="flex p-2">
+                <div class="flex items-center justify-center w-24 text-white bg-green-500 rounded-full h-8">Running</div>
+                <div class="pl-2 text-gray-600">
+                    <p class="-mt-2 font-bold">Drawing circos plot</p>
+                </div>
+            </div>
+        </div>       
+        {% endif %}           
+        {% if stepno==99 %}
+        <div class="mt-2 text-sm bg-white rounded-full shadow" role="alert">
+            <div class="flex p-2">
+                <div class="flex items-center justify-center w-24 text-white bg-green-500 rounded-full h-8">Completed</div>
+                <div class="pl-2 text-gray-600">
+                    <p class="-mt-2 font-bold">Drawing circos plot</p>
+                    <p class="-mb-2">{{stime5}}</p>
+                </div>
+            </div>
+        </div>             
+        {% endif %}
+            
+            
+        <!-- Analysis process step -->
+        <br><br>
+        <div class="text-sm mb-2 rounded-full " role="alert">
+            <form  id="form_start_stop" action="/samples/startstop" method='POST' >
+                <div class="flex p-2 items-center justify-center ">
+                    {% if(stepno in [0]) %}
+                    <button ID="bt_startrun" class="bg-blue-500 w-[10rem] hover:bg-blue-700 text-white text-center font-bold py-2 px-4 rounded-full">START</button>
+                    {% elif(stepno in [99,5]) %}
+                    <button ID="bt_startrun" class="bg-blue-500 w-[10rem] hover:bg-blue-700 text-white text-center font-bold py-2 px-4 rounded-full">RESTART</button>
+                    {% else %}
+                    <button ID="bt_startrun" class="bg-blue-500 w-[10rem] hover:bg-blue-700 text-white text-center font-bold py-2 px-4 rounded-full">STOP</button>
+                    {% endif %}
+                </div>
+                <input type="text" id="sampleid" class="hidden" onsubmit="return false" name="sampleid" value="{{SampleID}}">
+            </form>     
+        </div>
+    </div>
+
+    <!-- sample edit message box -->
+    <form id="form_edit_sample"  class="modal" action="/samples/editsample" method='POST' >
+        <div class="hidden  fixed inset-0 10 bg-black opacity-40" id="mb_sampleedit-bg"></div>
+        <div id="mb_sampleedit" class="hidden fixed z-20 px-4 py-4 space-y-1 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md top-1/2 left-1/2 min-w-[80%] drop-shadow-lg">
+            <h1 id="SampleTitle" class="text-2xl font-semibold">
+                Sample edit
+            </h1> <hr> 
+            <input type="text" id="AnalysisID" name="AnalysisID" class="hidden">
+            <div class="grid gap-2 mb-4 grid-cols-4">
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Sample ID</label>
+                    <input type="text" id="SampleDataID" name="SampleDataID" onsubmit="return false" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="ID" required>
+                </div>
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Patient ID</label>
+                    <input type="text" id="PatientID" name="PatientID" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="ID" required>
+                </div>
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Patient name</label>
+                    <input type="text" id="PatientName" name="PatientName" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="NAME">
+                </div>
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Sample Source</label>
+                    <input id="SampleSource" name="SampleSource"type="text" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="BLOOD">
+                </div>
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Culture Type</label>
+                    <input id="CultureType" name="CultureType"type="text" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="PLATE">
+                </div>
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Sequencer</label>
+                    <input id="Sequencer" name="Sequencer"type="text" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="NAME">
+                </div>
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Method</label>
+                    <input id="Method" name="Method"type="text" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="MATHOD">
+                </div>
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Pipeline</label>
+                    <input id="Pipeline" name="Pipeline"type="text" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="PIPELINE">
+                </div>
+            </div> 
+            <div class="grid gap-2 mb-4 md:grid-cols-4">
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Receieved Date</label>
+                    <div class="relative">
+                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                            <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                        </div>
+                        <input id="RecvDate" name="RecvDate" datepicker datepicker-orientation="bottom right" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Library Prep Date</label>
+                    <div class="relative">
+                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                            <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                        </div>
+                        <input id="LibPrepDate" name="LibPrepDate" datepicker datepicker-orientation="bottom right" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Sequencing Date</label>
+                    <div class="relative">
+                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                            <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                        </div>
+                        <input id="SeqDate" name="SeqDate" datepicker datepicker-orientation="bottom right" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Report Date</label>
+                    <div class="relative">
+                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                            <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                        </div>
+                        <input id="ReportDate" name="ReportDate" datepicker datepicker-orientation="bottom right" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
+                    </div>
+                </div>
+            </div>
+            <div class="grid gap-2 mb-4 md:grid-cols-2">
+                <div class="mb-6">
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">R1 Data file name</label>
+                    <input id="Analysis_R1name" name="Analysis_R1name" type="text" readonly class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="fastq.gz" value="">
+                </div>
+                <div classs="mb-6">
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">R2 Data file name</label>
+                    <input id="Analysis_R2name" name="Analysis_R2name" type="text" readonly class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="fastq.gz">
+                </div>
+            </div>
+           
+            
+            <div class="grid gap-2 mb-4 md:grid-cols-2">
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Doctor's Name</label>
+                    <input id="DrName" name="DrName"type="text"  class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="NAME">
+                </div>
+            </div>
+            <div class="grid gap-2 mb-4 md:grid-cols-2">
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Reporting Laboratory</label>
+                    <input id="ReportLab" name="ReportLab"type="text" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Laboratory">
+                </div>
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Address</label>
+                    <input id="Address" name="Address"type="text" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Address">
+                </div>
+            </div>
+            <br>
+            <div class="ml-1  flex flex-col items-center ">
+                <!-- This button is used to close the dialog -->
+                <div>
+                    <button href="#" id="bt_samplecancel" class="px-5 py-2 text-white bg-indigo-400 rounded-md cursor-pointer hover:bg-indigo-700" onclick="toggcleModal('mb_sampleedit')">Cancel</button>
+                    <button href="#" id="bt_samplesubmit" class="px-5 py-2 ml-2 text-white bg-blue-400 rounded-md cursor-pointer hover:bg-blue-900">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>     
+
+    <!-- File list Select box -->
+    <form  id="form_filename_select" class="modal" action="">
+        <div class="fixed hidden inset-0 z-30 bg-black opacity-40"  id="mb_fileselect-bg"></div>
+        <div id="mb_fileselect" class="hidden fixed z-40 px-8 py-6 space-y-2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md top-1/2 left-1/2 w-400 drop-shadow-lg">
+            <input type="text" id="r1r2select" class="hidden" value=" ">
+            <input type="text" class="px-4 -py-2 text-white bg-indigo-100 rounded-md text-black " id="fastq_filelistInput" onkeyup="fastq_filelistInputFunction()" placeholder="Search for names..">
+            <div class="w-48 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white" style="height:140px;width:300px;overflow:auto;border:8px%">
+                <ul id="fastq_filelist">
+                    {% for lt in filelist %} 
+                        <li value={{loop.index}}><a href="#" class="block py-0 px-2 w-full border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">{{lt}}</a></li>
+                    {% endfor %}            
+                </ul>
+            </div>
+            <div class="ml-1  flex flex-col items-center ">
+                <button href="#" id="bt_fileselectclose" class="px-4 -py-2 text-white bg-indigo-400 rounded-md cursor-pointer hover:bg-indigo-700" onclick="toggcleModal('mb_fileselect')">Cancel</button>
+            </div>
+        </div>
+    </form>
+
+
+   
+</section>
+
+
+{% endblock %}
+
+
+
+
+
+
+{% block scripts %} 
+
+<script src="https://unpkg.com/flowbite@1.5.5/dist/datepicker.js"></script>
+<script type="text/javascript">
+
+    // Enter submit 방지
+    document.addEventListener('keydown', function(event) {  
+        if (event.keyCode === 13) {
+            event.preventDefault();
+        };
+    }, true);
+
+    function toggcleModal(modalid) {
+        event.preventDefault();
+        
+        console.log("func:"+modalid);
+        document.getElementById(modalid).classList.toggle("hidden");
+        document.getElementById(modalid+"-bg").classList.toggle("hidden");
+    };
+
+    function closeAlert(event){
+        let element = event.target;
+        while(element.nodeName !== "BUTTON"){
+            element = element.parentNode;
+        }
+        element.parentNode.parentNode.removeChild(element.parentNode);
+    }
+
+    function fileUploadsend(fis) {
+        var str = fis.value;
+        document.getElementById('sendbutton').click();
+    }
+    
+    function inputfilename()  {
+        document.getElementById('uploadfilename').click();
+    }      
+
+      // File list 
+    function fastq_filelistInputFunction() {
+        // Declare variables
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById('fastq_filelistInput');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("fastq_filelist");
+        li = ul.getElementsByTagName('li');
+    
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+    //Analysis_Filename
+    $('#Analysis_R1name').click(function() {       // 파일 선택리스트 창 표시
+        console.log('select' + $(this).val());
+        //debugger;
+        $("#r1r2select").val("1")
+        $("#fastq_filelistInput").val("")
+       // $("#form_delete_filename").attr("action","/samples?sampleid="+fid);  // 삭제할 내용 적용
+        $("#mb_fileselect").removeClass("hidden");
+        $("#mb_fileselect-bg").removeClass("hidden");  
+    });
+
+    $('#Analysis_R2name').click(function() {       // 파일 선택리스트 창 표시
+        //debugger;
+        console.log('select' + $(this).val());
+        $("#r1r2select").val("2")
+        $("#fastq_filelistInput").val("")
+       // $("#form_delete_filename").attr("action","/samples?sampleid="+fid);  // 삭제할 내용 적용
+        $("#mb_fileselect").removeClass("hidden");
+        $("#mb_fileselect-bg").removeClass("hidden");  
+    });
+
+    
+    
+    $("#bt_sample_edit_show").click( function() {         // sample 편집창 표출
+        console.log("bt_sample_edit : "+$(this).text());
+
+        $("#SampleTitle").val("Sample edit");
+        $("#AnalysisID").val( $("#summary_sampleID").val() );
+        $("#SampleDataID").val( $("#summary_sampledataID").val() );
+        $("#PatientID").val( $("#summary_patientID").val() );
+        $("#PatientName").val(  $("#summary_patientName").val() );
+        $("#SampleSource").val( $("#summary_sampleSource").val() );
+        $("#CultureType").val( $("#summary_cultureType").val() );
+        $("#Sequencer").val( $("#summary_sequencer").val() );
+        $("#Method").val( $("#summary_method").val() );
+        $("#Pipeline").val( $("#summary_pipeline").val() );
+        $("#RecvDate").val(  $("#summary_recvDate").val() );
+        $("#LibPrepDate").val(  $("#summary_labprepDate").val() );
+        $("#SeqDate").val( $("#summary_seqDate").val() );
+        $("#ReportDate").val( $("#summary_reportDate").val() );
+        $("#Analysis_R1name").val($("#summary_r1name").val() );
+        $("#Analysis_R2name").val($("#summary_r2name").val() );
+        $("#DrName").val($("#summary_drName").val() );
+        $("#ReportLab").val($("#summary_reportLab").val() );
+        $("#Address").val($("#summary_address").val() );
+        $("#form_edit_sample").attr("action","/samples/editsample");  // 추가할 주소
+        $("#mb_sampleedit").removeClass("hidden");
+        $("#mb_sampleedit-bg").removeClass("hidden");  
+    });
+
+    $("#fastq_filelist a").click(function(){
+        console.log($(this).text()+", "+$(this).parent().val());    // 선택 filename과 Datafile id
+        console.log($("#r1r2select").val());    // 선택 filename과 Datafile id
+        //debugger;
+        if($("#r1r2select").val() == "1"){
+            $("#Analysis_R1name").val($(this).text())
+        }else{
+            $("#Analysis_R2name").val($(this).text())
+        }
+        toggcleModal('mb_fileselect')
+    });
+    
+    $("#bt_samplesubmit").click( function() {         // sample 신규등록 전송
+        console.log("bt_sample_newadd : "+$(this).text());
+        console.log("pa id : "+$("#PatientID").val());
+        if( $("#SampleDataID").val() == '' )
+            $("#SampleDataID").val(' ')
+        if( $("#PatientID").val() == '' )
+            $("#PatientID").val(' ')
+        if( $("#PatientName").val() == '' )
+            $("#PatientName").val(' ')
+        if( $("#SampleSource").val() == '' )
+            $("#SampleSource").val(' ')
+        if( $("#CultureType").val() == '' )
+            $("#CultureType").val(' ')
+        if( $("#Sequencer").val() == '' )
+            $("#Sequencer").val(' ')
+        if( $("#Method").val() == '' )
+            $("#Method").val(' ')
+        if( $("#Pipeline").val() == '' )
+            $("#Pipeline").val(' ')
+        if( $("#RecvDate").val() == '' )
+            $("#RecvDate").val('01/01/2000')
+        if( $("#LibPrepDate").val() == '' )
+            $("#LibPrepDate").val('01/01/2000')
+        if( $("#SeqDate").val() == '' )
+            $("#SeqDate").val('01/01/2000')
+        if( $("#ReportDate").val() == '' )
+            $("#ReportDate").val('01/01/2000')
+        if( $("#Analysis_R1name").val() == '' )
+            $("#Analysis_R1name").val(' ')
+        if( $("#Analysis_R2name").val() == '' )
+            $("#Analysis_R2name").val(' ')
+        if( $("#DrName").val() == '' )
+            $("#DrName").val(' ')
+        if( $("#ReportLab").val() == '' )
+            $("#ReportLab").val(' ')
+        if( $("#Address").val() == '' )
+            $("#Address").val(' ')
+
+        toggcleModal('mb_sampleedit')
+
+        $("#form_edit_sample").submit();            
+    });
+
+    
+
+    $("#bt_startrun").click( function() {         // sample 신규등록 전송
+        console.log("bt_start : "+$(this).text());       
+
+        $("#form_start_stop").submit();         
+    });
+       
+</script>
+
+  
+{% endblock %}

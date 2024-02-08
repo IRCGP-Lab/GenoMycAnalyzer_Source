@@ -1,0 +1,16 @@
+{% if error_msg %} 
+  <div class="text-white px-6 py-2 border-0 rounded relative mb-2 bg-pink-500">
+    <span class="inline-block align-middle mr-8"><b class="capitalize">&#10004; Error :</b> {{error_msg}}</span>
+    <button class="absolute bg-transparent text-2xl font-semibold leading-none right-0 top-0 mt-1 mr-6 outline-none focus:outline-none" onclick="closeAlert(event)"> 
+      <span>×</span>
+    </button>
+  </div>
+{% endif %}
+{% if accept_msg %} 
+  <div class="text-white px-6 py-2 border-0 rounded relative mb-2 bg-green-500">
+    <span class="inline-block align-middle mr-8"><b class="capitalize">&#10004; Message :</b> {{accept_msg}}</span>
+    <button class="absolute bg-transparent text-2xl font-semibold leading-none right-0 top-0 mt-1 mr-6 outline-none focus:outline-none" onclick="closeAlert(event)"> 
+      <span>×</span>
+    </button>
+  </div>
+{% endif %}

@@ -1,0 +1,623 @@
+{% extends "base.html" %} {% block title %}
+<title>GenoMycAnalyzer</title>
+{% endblock %} {% block content %}
+<section class="bg-slate-100">
+  <nav class="flex flex-wrap items-center justify-between p-2 bg-white teal-100">
+    <div class="flex-grow block w-full lg:flex lg:w-auto lg:items-center">
+      <div class="text-sm lg:flex-grow">
+        <a href="/samples/summary/{{SampleID}}" class="block mt-4 ml-4 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Summary </a>
+        <a href="/samples/statistics/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Statistics&QC </a>
+        <a href="/samples/variants/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Variants </a>
+        <a href="/samples/rav/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> RAV </a>
+        <a href="/samples/report/{{SampleID}}" class="block mt-4 ml-6 text-orange-700 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Report </a>
+      </div>
+    </div>
+  </nav>
+  <div class="h-0.5 bg-gradient-to-r from-cyan-200 to-blue-300"></div>
+
+  <!-- Sample Report page -->
+
+  <div class="col-start-1 row-start-1 row-end-2 p-2 bg-white box group rounded-xl">
+    <div class="flex items-end justify-between w-auto h-auto space-y-1">
+      <div class="h-6 ml-2 font-bold w-30 item">
+        <span class="border bg-teal-600 px-0.5"></span>
+        <span class="ml-1">Report</span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <!-- <button id="bt_sample_edit_show" type="button" class="px-4 mr-2 text-gray-500 border rounded border-stone-400 hover:border-transparent hover:bg-sky-200 hover:text-teal-700 lg:mt-0">Result Edit</button> -->
+        <button onclick="pdfdownload()" class="px-4 mr-2 text-gray-500 border rounded border-stone-400 hover:border-transparent hover:bg-sky-200 hover:text-teal-600 lg:mt-0">PDF Download</button>
+      </div>
+    </div>
+
+    <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+    <div class="WordSection1">
+      <p class="MsoNormal" align="left" style="text-align: left; text-indent: 154pt">
+        <b><span lang="EN-US" style="font-size: 14pt; line-height: 105%; font-family: 'Arial', sans-serif">MycoChase Sequence Analysis Report</span></b>
+      </p>
+
+      <p class="MsoNormal" align="center" style="text-align: center">
+        <b><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">&nbsp;</span></b>
+      </p>
+
+      <p class="MsoNormal">
+        <b><span lang="EN-US" style="font-size: 11pt; line-height: 105%; font-family: 'Arial', sans-serif">Sample Details</span></b>
+      </p>
+
+      <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="837" style="width: 627.75pt; border-collapse: collapse">
+        <tr style="height: 19.4pt">
+          <td width="150" style="width: 112.5pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Patient ID</span></p>
+          </td>
+          <td width="245" style="width: 183.6pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{PatientID}}</span></p>
+          </td>
+          <td width="160" style="width: 120pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Patient name</span></p>
+          </td>
+          <td width="283" style="width: 211.95pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{PatientName}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 19.4pt">
+          <td width="150" style="width: 112.5pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Sample ID</span></p>
+          </td>
+          <td width="245" style="width: 183.6pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{DataID}}</span></p>
+          </td>
+          <td width="160" style="width: 120pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Sample Received Date</span></p>
+          </td>
+          <td width="283" style="width: 211.95pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">{{RecvDate}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 19.4pt">
+          <td width="150" style="width: 112.5pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Sample Source</span></p>
+          </td>
+          <td width="245" style="width: 183.6pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{Source}}</span></p>
+          </td>
+          <td width="160" style="width: 120pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Library Prep Date</span></p>
+          </td>
+          <td width="283" style="width: 211.95pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">{{LibPrepDate}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 19.4pt">
+          <td width="150" style="width: 112.5pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Culture Type</span></p>
+          </td>
+          <td width="245" style="width: 183.6pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{CultureType}}</span></p>
+          </td>
+          <td width="160" style="width: 120pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Sequencing Date</span></p>
+          </td>
+          <td width="283" style="width: 211.95pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">{{SeqDate}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 19.4pt">
+          <td width="150" style="width: 112.5pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Laboratory Technician</span></p>
+          </td>
+          <td width="245" style="width: 183.6pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{LabTechnician}}</span></p>
+          </td>
+          <td width="160" style="width: 120pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Report Date</span></p>
+          </td>
+          <td width="283" style="width: 211.95pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">{{ReportDate}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 19.4pt">
+          <td width="150" style="width: 112.5pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Contact</span></p>
+          </td>
+          <td width="687" colspan="3" style="width: 515.6pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 19.4pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{Contact}}</span></p>
+          </td>
+        </tr>
+      </table>
+
+      <p class="MsoNormal">
+        <b><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">&nbsp;</span></b>
+      </p>
+
+      <p class="MsoNormal">
+        <b><span lang="EN-US" style="font-size: 11pt; line-height: 105%; font-family: 'Arial', sans-serif">Assay Details</span></b>
+      </p>
+
+      <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="839" style="width: 629.25pt; border-collapse: collapse">
+        <tr style="height: 20.85pt">
+          <td width="150" style="width: 112.65pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.85pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Sequencer</span></p>
+          </td>
+          <td width="245" style="width: 183.85pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.85pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Illumina MiSeqDx</span></p>
+          </td>
+          <td width="160" style="width: 120.1pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.85pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Method</span></p>
+          </td>
+          <td width="283" style="width: 212.45pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.85pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Targeted Panel NGS</span></p>
+          </td>
+        </tr>
+        <tr style="height: 23.55pt">
+          <td width="150" style="width: 112.65pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 23.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Pipeline</span></p>
+          </td>
+          <td width="245" style="width: 183.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 23.55pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">MycoAnalyzer version 1.0.0</span></p>
+          </td>
+          <td width="160" style="width: 120.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 23.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Reference</span></p>
+          </td>
+          <td width="283" style="width: 212.45pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 23.55pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">H37Rv (NC_000962.3)</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.85pt">
+          <td width="150" style="width: 112.65pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.85pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Quality Control</span></p>
+          </td>
+          <td width="689" colspan="3" style="width: 516.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.85pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">{{QualityControl}}</span></p>
+          </td>
+        </tr>
+      </table>
+
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">&nbsp;</span></p>
+
+      <p class="MsoNormal">
+        <b><span lang="EN-US" style="font-size: 11pt; line-height: 105%; font-family: 'Arial', sans-serif">MycoChase Species Identification</span></b>
+      </p>
+
+      <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="841" style="width: 630.75pt; border-collapse: collapse">
+        <tr style="height: 22.45pt">
+          <td width="143" style="width: 106.95pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.45pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Species (%)</span></p>
+          </td>
+          <td width="698" style="width: 523.45pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.45pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">{{Species}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 22.45pt">
+          <td width="143" style="width: 106.95pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.45pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Lineage*</span></p>
+          </td>
+          <td width="698" style="width: 523.45pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.45pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">{{Lineage}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 22.45pt">
+          <td width="143" style="width: 106.95pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.45pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Spoligotype*</span></p>
+          </td>
+          <td width="698" style="width: 523.45pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.45pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">{{Spligotype}}</span></p>
+          </td>
+        </tr>
+      </table>
+
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">*Lineage and spoligotype are only reported for Mycobacterium tuberculosis complex. The lineage was estimated based on the 90 single nucleotide </span></p>
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">polymorphisms (SNPs) reported by Napier et al. [Genome Med. 2020;12(1):114]&nbsp;</span></p>
+      <br>
+
+      <p class="MsoNormal">
+        <b><span lang="EN-US" style="font-size: 11pt; line-height: 105%; font-family: 'Arial', sans-serif">MycoChase Drug Susceptibility Test</span></b>
+      </p>
+
+      <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="841" style="width: 630.75pt; border-collapse: collapse">
+        <tr style="height: 79.65pt">
+          <td width="661" colspan="4" style="width: 496.05pt; border: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 79.65pt">
+            <p class="MsoNormal" align="left" style="margin-top: 0cm; margin-right: 0cm; margin-bottom: 0cm; margin-left: 6.5pt; text-align: left; text-indent: 0.05pt; line-height: normal">
+              <span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151"
+                >Resistance (R) is reported when a reported resistance mutation is detected in loci of interest.* Except for RIF and INH, drugs-related mutations cannot be used for diagnosis because they have not been evaluated through clinical trials. Regarding the RIF and INH, mutations with tier 3 (uncertain significance) need to be further verified. Susceptible (S) = no mutation is detected in the genes associated with resistance to the drugs or all detected mutations are considered to be
+                consistent with susceptibility. Susceptible(S) does not exclude the possibility of resistance.</span
+              >
+            </p>
+          </td>
+          <td width="180" style="width: 134.7pt; border: solid black 1pt; border-left: none; padding: 0cm 0.25pt 0cm 0.25pt; height: 79.65pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal">
+              <span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black"
+                >No mutation detected<br />
+                MDR**<br />
+                XDR**</span
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 22.35pt">
+          <td width="94" style="width: 70.55pt; border: solid black 1pt; border-top: none; padding: 0cm 0.25pt 0cm 0.25pt; height: 22.35pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Class</span></p>
+          </td>
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 22.35pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Drug</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 22.35pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Gene Target# (AA change, VAF, Tier)</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 22.35pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Result</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 22.35pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Comments</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.55pt">
+          <td width="94" rowspan="4" style="width: 70.55pt; border: solid black 1pt; border-top: none; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">1st-line drugs</span></p>
+          </td>
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">ISONIAZID (INH)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{INHGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{INHResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{INHComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.85pt">
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.85pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">RIFAMPICIN (RIF)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.85pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{IRFGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.85pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{IRFResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.85pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{IRFComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 21.15pt">
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21.15pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">ETHAMBUTOL (EMB)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21.15pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{EMBGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21.15pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{EMBResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21.15pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{EMBComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.75pt">
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.75pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">PYRAZINAMIDE (PZA)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.75pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{PZAGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.75pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{PZAResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.75pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{PZAComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.4pt">
+          <td width="94" rowspan="5" style="width: 70.55pt; border: solid black 1pt; border-top: none; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal">
+              <span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151"
+                >2st-line drugs<br />
+                (group A)</span
+              >
+            </p>
+          </td>
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">LEVOFLOXACIN (LFX)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{LFXGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{LFXResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.4pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{LFXComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.7pt">
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.7pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">OFLOXACIN (OFX)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.7pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{OFXGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.7pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{OFXResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.7pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{OFXComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.95pt">
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.95pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">MOXIFLOXACIN (MFX)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.95pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{MFXGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.95pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{MFXResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.95pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{MFXComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.55pt">
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">LINEZOLID (LZD)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{LZDGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{LZDResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{LZDComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.9pt">
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.9pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">BEDAQUILINE (BDQ)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.9pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{BDQGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.9pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{BDQResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.9pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{BDQComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 6.95pt">
+          <td width="94" style="width: 70.55pt; border: solid black 1pt; border-top: none; padding: 0cm 0.25pt 0cm 0.25pt; height: 6.95pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal">
+              <span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151"
+                >2st-line drugs<br />
+                (group B)</span
+              >
+            </p>
+          </td>
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 6.95pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">CLOFAZIMINE (CFZ)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 6.95pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{CFZGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 6.95pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{CFZResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 6.95pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{CFZComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 18.65pt">
+          <td width="94" rowspan="7" style="width: 70.55pt; border: solid black 1pt; border-top: none; padding: 0cm 0.25pt 0cm 0.25pt; height: 18.65pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal">
+              <span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151"
+                >2st-line drugs<br />
+                (group C)</span
+              >
+            </p>
+          </td>
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 18.65pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">DELAMANID (DEL)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 18.65pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{DELGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 18.65pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{DELResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 18.65pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{DELComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.35pt">
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.35pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">AMIKACIN (AMK)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.35pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{AMKGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.35pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{AMKResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.35pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{AMKComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.65pt">
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.65pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">CAPREOMYCIN (CAP)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.65pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{CAPGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.65pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{CAPResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.65pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{CAPComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.95pt">
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.95pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">KANAMYCIN (KAN)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.95pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{KANGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.95pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{KANResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.95pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{KANComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.55pt">
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">STREPTOMYCIN (STM)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{STMGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{STMResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.55pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{STMComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.85pt">
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.85pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">ETHIONAMIDE (ETO)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.85pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{ETOGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.85pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{ETOResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.85pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{ETOComment}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.5pt">
+          <td width="170" style="width: 127.5pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.5pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">PROTHIONAMIDE (PTO)</span></p>
+          </td>
+          <td width="293" style="width: 219.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.5pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{PTOGene}}</span></p>
+          </td>
+          <td width="104" style="width: 78.15pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.5pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{PTOResult}}</span></p>
+          </td>
+          <td width="180" style="width: 134.7pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.5pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{PTOComment}}</span></p>
+          </td>
+        </tr>
+      </table>
+
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">*The target genes for resistance mutations were derived from the Catalogue of mutations in Mycobacterium tuberculosis complex and their association with </span></p>
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif"> drug resistance (2021, World Health Organization; Lancet Microbe. 2022;3(4):e265)</span></p>
+
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">**MDR, multi-drug resistance; XDR: extensively drug resistance</span></p>
+
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">#AA change, amino acids change; VAF, variant allele frequency; Tier is derived from the Catalogue of mutations in Mycobacterium tuberculosis complex and </span></p>
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">their association with drug resistance (2021, World Health Organization).</span></p>
+      <br>
+      
+      <p class="MsoNormal">
+        <b><span lang="EN-US" style="font-size: 11pt; line-height: 105%; font-family: 'Arial', sans-serif">Final Result</span></b>
+      </p>
+
+      <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="844" style="width: 632.9pt; border-collapse: collapse">
+        <tr style="height: 90pt">
+          <td width="844" valign="top" style="width: 632.9pt; border: solid windowtext 1pt; padding: 0cm 5.4pt 0cm 5.4pt; height: 90pt">
+            <p class="MsoNormal" style="margin-bottom: 0cm; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif">{{FinalResult}}</span></p>
+          </td>
+        </tr>
+      </table>
+
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">*The result for drug resistance is based on tier 1 or 2 mutations reported by the Catalogue of mutations in Mycobacterium tuberculosis complex and their </span></p>
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">association with drug resistance (2021, World Health Organization).</span></p>
+
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">&nbsp;</span></p>
+
+      <p class="MsoNormal">
+        <b><span lang="EN-US" style="font-size: 11pt; line-height: 105%; font-family: 'Arial', sans-serif">Additional Comment</span></b>
+      </p>
+
+      <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="841" style="width: 630.75pt; border-collapse: collapse">
+        <tr style="height: 81.4pt">
+          <td width="841" valign="top" style="width: 630.75pt; border: solid windowtext 1pt; padding: 0cm 5.4pt 0cm 5.4pt; height: 81.4pt">
+            <p class="MsoNormal" style="margin-bottom: 0cm; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif">{{AdditionalComment}}</span></p>
+          </td>
+        </tr>
+      </table>
+
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">*The result for drug resistance is based on tier 1 or 2 mutations reported by the Catalogue of mutations in Mycobacterium tuberculosis complex and their </span></p>
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">association with drug resistance (2021, World Health Organization).</span></p>
+
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">&nbsp;</span></p>
+
+      <p class="MsoNormal">
+        <b><span lang="EN-US" style="font-size: 11pt; line-height: 105%; font-family: 'Arial', sans-serif">Authorized By</span></b>
+      </p>
+
+      <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="841" style="width: 630.75pt; border-collapse: collapse">
+        <tr style="height: 22.75pt">
+          <td width="143" rowspan="2" style="width: 107pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.75pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Reporting Laboratory</span></p>
+          </td>
+          <td width="273" rowspan="2" style="width: 204.65pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.75pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{ReportLab}}</span></p>
+          </td>
+          <td width="123" style="width: 91.95pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.75pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Doctor`s Name</span></p>
+          </td>
+          <td width="302" style="width: 8cm; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.75pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{DoctorName}}</span></p>
+          </td>
+        </tr>
+        <tr style="height: 42.2pt">
+          <td width="123" style="width: 91.95pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 42.2pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: #374151">Signature</span></p>
+          </td>
+          <td width="302" style="width: 8cm; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 42.2pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">&nbsp;</span></p>
+          </td>
+        </tr>
+        <tr style="height: 20.1pt">
+          <td width="143" style="width: 107pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.1pt">
+            <p class="MsoNormal" align="center" style="margin-bottom: 0cm; text-align: center; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">Address</span></p>
+          </td>
+          <td width="698" colspan="3" style="width: 523.4pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.1pt">
+            <p class="MsoNormal" align="left" style="margin-bottom: 0cm; text-align: left; line-height: normal"><span lang="EN-US" style="font-size: 9pt; font-family: 'Arial', sans-serif; color: black">{{LabAddress}}</span></p>
+          </td>
+        </tr>
+      </table>
+
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">&nbsp;</span></p>
+
+      <p class="MsoNormal"><span lang="EN-US" style="font-size: 9pt; line-height: 105%; font-family: 'Arial', sans-serif">&nbsp;</span></p>
+    </div>
+  </div>
+</section>
+
+{% endblock %} {% block scripts %}
+
+<script src="https://unpkg.com/flowbite@1.5.5/dist/datepicker.js"></script>
+<script type="text/javascript">
+  function pdfdownload() {
+    var element = document.createElement("a");
+    element.setAttribute("href", "/static/pdf/2428.pdf");
+    element.setAttribute("download", "2428.pdf");
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  }
+</script>
+
+{% endblock %}
+
+
+`created_at` DATETIME NOT NULL,
+`updated_at` DATETIME NOT NULL,

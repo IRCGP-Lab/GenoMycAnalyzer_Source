@@ -1,0 +1,589 @@
+
+{% extends "base.html" %}
+
+
+{% block title %}
+  <title>GenoMycAnalyzer</title>
+{% endblock %}
+
+{% block content %}
+
+<section class="py-5 px-7">
+    <div class="col-start-1 row-start-1 row-end-2 bg-white box group rounded-xl">
+        <div class="flex items-end justify-between w-auto h-auto space-y-1">
+            <div class="h-6 ml-2 font-bold w-30 item">
+                <span class="border bg-teal-600 px-0.5"></span>
+                <span class="ml-1">ANALYSIS LIST</span>
+            </div>
+        </div>
+         
+        <div class="flex px-2 mt-2 mb-2 ml-2 mr-2 border-t border-gray-300"></div>
+            <div class="flex flex-row justify-between space-x-2">
+                <!-- Add/Delte Button -->
+                <div class="flex ml-2 space-x-1">
+                    <button id="bt_sample_newadd_show" type="button" class="rounded-xl h-8 px-5 pt-1.5 pb-2 bg-blue-600 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center">
+                        &#x254A; ADD
+                    </button>
+
+                    <button id="bt_sample_delete" type="button" class="rounded-xl h-8 px-5 pt-1.5 pb-2 bg-blue-600 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center">
+                        &#128465; DELETE
+                    </button>
+                    <button id="bt_sample_run" type="button" class="rounded-xl h-8 px-5 pt-1.5 pb-2 bg-blue-600 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center">
+                        <span style='font-size:16px;'class='-mt-0.5 mr-2'>&#9193;</span> START
+                    </button>
+                 
+                    <!-- Add Batch Button -->
+                    <form action="/samples/upload/" enctype="multipart/form-data" method="post">
+                        <input type="file" name='files' multiple  id='uploadfilename' onchange="fileUploadsend(this)" class='hidden'  accept=".xlsx">
+                        <input type="submit" id="sendbutton" class='hidden'>
+                            <div class="flex ml-6 space-x-1">
+                            <button type="button" class="bt_userAdd rounded-xl h-8 px-5 pt-1.5 pb-2 bg-blue-600 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center" onclick='inputfilename()'> 
+                                <span style='font-size:16px;'class='-mt-1 mr-2'>&#128221;</span>ADD BATCH
+                            </button>
+                        </div> 
+                    </form>
+
+                    <!-- Example) batch download Button -->
+                    <button onclick="xlsxfiledownload()" type="button" class="rounded-xl h-8 px-5 pt-1.5 pb-2 bg-blue-600 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center">
+                        <span style='font-size:16px;'class='-mt-1 mr-2'>&#128220;</span>Batch exsample
+                    </button>
+                    <button onclick = "exportsampledownload()" type="button" class="rounded-xl h-8 px-5 pt-1.5 pb-2 bg-blue-600 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center">
+                        <span style='font-size:16px;'class='-mt-1 mr-2'>&#128209;</span>Export
+                    </button>
+                    
+                </div>
+                <!-- Search box -->
+                <div class="relative z-0">
+                    <form action="{{search_link}}">
+                        <div class="search">
+                            <input type="text" class="pl-4 pr-20 mt-0 text-sm transition-all border rounded-lg outline-none h-9 w-60 focus:border-blue-600" placeholder="Search Sample ID" id="search_name" name="search_name" value="{{search_name}}">
+                            <button class="absolute w-16 text-sm text-white transition-all bg-blue-500 rounded-lg cursor-pointer h-7 right-2 hover:bg-blue-900 top-1" type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Analysis table -->
+        <table class="w-full mt-2 text-sm text-center text-gray-900 bg-white border-separate shadow-none ">
+            <thead>
+                <tr>
+                    <!--<th class="w-[6%] p-2 text-white bg-blue-500">Select<input type="checkbox" id="checkall" name="checkall"/></th>-->
+                    <th class="w-[2%] p-2 text-white bg-blue-500"><input type="checkbox" id="checkall" name="checkall"/></th>
+                    <th class="w-[4%] p-2 text-white bg-blue-500"><a href="{{order_id}}">Analysis ID</a></th>
+                    <th class="w-[6%] p-2 text-white bg-blue-500"><a href="{{order_sampleid}}">Sample ID</a></th>
+                    <th class="w-[17%] p-2 text-white bg-blue-500">R1 file</th>
+                    <th class="w-[17%] p-2 text-white bg-blue-500">R2 file</th>
+                    <th class="w-[3%] p-2 text-white bg-blue-500">QC status</th>
+                    <th class="w-[16%] p-2 text-white bg-blue-500">Species</th>
+                    <th class="w-[10%] p-2 text-white bg-blue-500">Lineage</th>
+                    <th class="w-[11%] p-2 text-white bg-blue-500">Spoligotype</th>
+                    <th class="w-[6%] p-2 text-white bg-blue-500"><a href="{{order_date}}">Job submission</a></th>
+                    <th class="w-[8%] p-2 text-white bg-blue-500"><a href="{{order_status}}">Status</a></th>
+                    <th class="hidden">Patient ID</a></th>
+                    <th class="hidden">Patient Name</a></th>
+                    <th class="hidden">SampleRecv_Date</a></th>
+                    <th class="hidden">Seq_Date</a></th>
+                    <th class="hidden">LabPrep_Date</a></th>
+                    <th class="hidden">LabTechnician</a></th>
+                    <th class="hidden">Contact</a></th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% if samples %}
+                    {% for lt in samples %}
+                        {% if (loop.index % 2)==1 %}
+                            <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 bg-blue-200 text-blue-900">
+                        {% else %}
+                            <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 bg-blue-100 text-blue-900">
+                        {% endif %}
+                    
+                        <td class="p-1">
+                            <a href="#" class="mr-2 text-base bt_edit_sample">&#x1F4C3;</a>
+                            <input type="checkbox" class="mr-2 text-base" name="row_checkbox">
+                        </td>
+                        <td class="p-1" onClick="location.href='/samples/summary/{{lt.id}}'">{{lt.id}}</td>
+                        <td class="p-1" onClick="location.href='/samples/summary/{{lt.id}}'">{{lt.sample_id}}</td>
+                        <td class="p-1" onClick="location.href='/samples/summary/{{lt.id}}'">{{lt.r1_name}}</td>
+                        <td class="p-1" onClick="location.href='/samples/summary/{{lt.id}}'">{{lt.r2_name}}</td>
+                        <td class="p-1" onClick="location.href='/samples/summary/{{lt.id}}'">{{lt.quality}}</td>
+                        <td class="p-1" onClick="location.href='/samples/summary/{{lt.id}}'">{{lt.species}}</td>
+                        <td class="p-1" onClick="location.href='/samples/summary/{{lt.id}}'">{{lt.lineage}}</td>
+                        <td class="p-1" onClick="location.href='/samples/summary/{{lt.id}}'">{{lt.spoligotype}}</td>
+                        <td class="p-1" onClick="location.href='/samples/summary/{{lt.id}}'">{{lt.created_at}}</td>
+                        
+                        {% if (lt.step_no==10) or (lt.step_no==20) or (lt.step_no==30) or (lt.step_no==40) or (lt.step_no==50)%}
+                            <td class="p-1"><a class="rounded-xl h-6 px-2 pt-1 pb-1 bg-[#00C675] text-white text-sm" >{{lt.step_no_name}}</a></td>
+                        {% elif lt.step_no == 99 %}
+                            <td class="p-1"><a class="rounded-xl h-6 px-3 pt-1 pb-1 bg-[#C24545] text-white text-sm" >{{lt.step_no_name}}</a></td>
+                        {% elif lt.step_no == 0 %}
+                            <td class="p-1"><a class="rounded-xl h-6 px-2 pt-1 pb-1  text-sm" >{{lt.step_no_name}}</a></td>
+                        {% else %}
+                            <td class="p-1"><a class="rounded-xl h-6 px-2 pt-1 pb-1 bg-[#5386B6] text-white text-sm" >{{lt.step_no_name}}</a></td>
+                        {% endif %}
+                            <td Class="hidden">{{lt.PatientID}}</td>
+                            <th class="hidden">{{lt.PatientName}}</th>
+                            <th class="hidden">{{lt.SampleRecvDate}}</th>
+                            <th class="hidden">{{lt.SeqDate}}</th>
+                            <th class="hidden">{{lt.LabPrepDate}}</th>
+                        </tr>
+                    {% endfor %}
+                {% else %}  
+                    {% for lt in samples %} 
+                    <tr class="text-blue-900 bg-blue-200 ">
+                        <td class="p-1"></td>
+                        <td class="p-1"></td>
+                        <td class="p-1"></td>
+                        <td class="p-1"></td>
+                        <td class="p-1"></td>
+                        <td class="p-1"></td>
+                        <td class="p-1"></td>
+                    </tr>
+                    {% endfor %}            
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- sample list delete message box -->
+    <form id="form_delete_filename" class="modal" action="" method='POST' >
+        <div class="fixed inset-0 z-40 hidden bg-black opacity-40" id="mb_yesno-bg"></div>
+            <div id="mb_yesno" class="fixed z-50 hidden px-8 py-6 space-y-5 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md top-1/2 left-1/2 w-300 drop-shadow-lg">
+            <h1 class="text-2xl font-semibold">
+                Confirm File Delete
+            </h1>
+            <div class="py-5 border-t border-b border-gray-300">
+                <p>Are you sure you want to delete?</p>
+                <p id="lb_delete_datafile_name" class="mt-2 text-center text-red-800 bt-10">FILE</p>
+            </div>
+            <div class="ml-1">
+                <!-- This button is used to close the dialog -->
+                <button href="" id="bt_deletefile_cancel" class="px-5 py-2 text-white bg-indigo-500 rounded-md cursor-pointer hover:bg-indigo-700" onclick="toggcleModal('mb_yesno')">
+                    Cancel
+                </button>
+                <button href="" id="bt_deletefile_yes" class="px-5 py-2 ml-2 text-white bg-red-500 rounded-md cursor-pointer hover:bg-indigo-700">
+                    Yes
+                </button>
+            </div>
+        </div>
+    </form>
+    
+    <!-- User add message box -->
+    <form id="form_add_sample"  class="modal" action="/samples/addsample" method='POST' >
+        <div class=" hidden fixed inset-0 z-40 bg-black opacity-40" id="mb_sampleadd-bg"></div>
+        <div id="mb_sampleadd" class="hidden fixed z-50 px-8 py-6 space-y-2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md top-1/2 left-1/2 w-400 drop-shadow-lg">
+            <h1 id="SampleTitle" class="text-2xl font-semibold">
+                Sample registration
+            </h1> <hr> <br>
+            <input type="text" id="AnalysisID" name="AnalysisID" class="hidden">
+            <div class="grid gap-4 mb-4 md:grid-cols-2">
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Patient ID</label>
+                    <input type="text" id="PatientID" name="PatientID" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="ID" required>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Patient name</label>
+                    <input type="text" id="PatientName" name="PatientName" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="NAME">
+                </div>
+            </div>
+            <div class="grid gap-4 mb-4 md:grid-cols-2">
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sample ID</label>
+                    <input type="text" id="SampleDataID" name="SampleDataID" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="ID" required>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sample Receieved Date</label>
+                    <div class="relative">
+                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                            <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                        </div>
+                        <input id="RecvDate" name="RecvDate" datepicker datepicker-orientation="bottom right" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
+                    </div>
+                </div>
+            </div>
+            <div class="grid gap-4 mb-4 md:grid-cols-2">
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Library Prep Date</label>
+                    <div class="relative">
+                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                            <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                        </div>
+                        <input id="LibPrepDate" name="LibPrepDate" datepicker datepicker-orientation="bottom right" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sequencing Date</label>
+                    <div class="relative">
+                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                            <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                        </div>
+                        <input id="SeqDate" name="SeqDate" datepicker datepicker-orientation="bottom right" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">R1 Data file name</label>
+                <input type="text" id="Analysis_R1name" name="Analysis_R1name" readonly class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="fastq.gz" value="">
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">R2 Data file name</label>
+                <input type="text" id="Analysis_R2name" name="Analysis_R2name" readonly class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="fastq.gz" value="">
+            </div>
+            <br><br>
+            <div class="ml-1  flex flex-col items-center ">
+                <!-- This button is used to close the dialog -->
+                <div>
+                    <button href="#" id="bt_samplecancel" class="px-5 py-2 text-white bg-indigo-400 rounded-md cursor-pointer hover:bg-indigo-700" onclick="toggcleModal('mb_sampleadd')">Cancel</button>
+                    <button href="#" id="bt_samplesubmit" class="px-5 py-2 ml-2 text-white bg-blue-400 rounded-md cursor-pointer hover:bg-blue-900">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>     
+
+    <!-- File list Select box -->
+    <form  id="form_filename_select" class="modal" action="">
+        <div class="fixed hidden inset-0 z-50 bg-black opacity-40"  id="mb_fileselect-bg"></div>
+        <div id="mb_fileselect" class="hidden fixed z-50 px-8 py-6 space-y-2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md top-1/2 left-1/2 w-400 drop-shadow-lg">
+            <input type="text" class="px-4 -py-2 text-white bg-indigo-100 rounded-md text-black " id="fastq_filelistInput" onkeyup="fastq_filelistInputFunction()" placeholder="Search for names..">
+            <input type="text" id="R1R2Select" name="R1R2Select" class="hidden" value="1">
+            <div class="w-48 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white" style="height:140px;width:300px;overflow:auto;border:8px%">
+                <ul id="fastq_filelist">
+                    {% for lt in filelist %} 
+                        <li value={{loop.index}}><a href="#" class="block py-0 px-2 w-full border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">{{lt}}</a></li>
+                    {% endfor %}            
+                </ul>
+            </div>
+            <div class="ml-1  flex flex-col items-center ">
+                <button href="#" id="bt_fileselectclose" class="px-4 -py-2 text-white bg-indigo-400 rounded-md cursor-pointer hover:bg-indigo-700" onclick="toggcleModal('mb_fileselect')">Cancel</button>
+            </div>
+        </div>
+    </form>
+</section>
+
+{% endblock %}
+
+{% block scripts %} 
+
+<script src="https://unpkg.com/flowbite@1.5.5/dist/datepicker.js"></script>
+<script type="text/javascript">
+    function toggcleModal(modalid) {
+        event.preventDefault();
+        
+        console.log("func:"+modalid);
+        document.getElementById(modalid).classList.toggle("hidden");
+        document.getElementById(modalid+"-bg").classList.toggle("hidden");
+    };
+    
+    function closeAlert(event){
+        let element = event.target;
+        while(element.nodeName !== "BUTTON"){
+            element = element.parentNode;
+        }
+        element.parentNode.parentNode.removeChild(element.parentNode);
+    }
+
+    function fileUploadsend(fis) {
+        var str = fis.value;
+        document.getElementById('sendbutton').click();
+    }
+    
+    function inputfilename()  {
+        document.getElementById('uploadfilename').click();
+    }      
+
+      // File list 
+    function fastq_filelistInputFunction() {
+        // Declare variables
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById('fastq_filelistInput');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("fastq_filelist");
+        li = ul.getElementsByTagName('li');
+    
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+    /*
+    // Table Delete 버튼 클릭시 Row 값 가져오기
+    $(".bt_delete_sample").click(function(){  
+        var str = ""
+        var tdArr = new Array();	// 배열 선언
+        var checkBtn = $(this);
+
+        // checkBtn.parent() : checkBtn의 부모는 <td>이다.
+        // checkBtn.parent().parent() : <td>의 부모이므로 <tr>이다.
+        var tr = checkBtn.parent().parent(); 
+        var td = tr.children();
+
+        console.log("클릭한 Row의 모든 데이터 : "+tr.text());
+        var fid = td.eq(1).text();
+        var fname = td.eq(2).text();
+        $("#lb_delete_datafile_name").text('Analysis ID: '+String(fid));  // 메세지 확인용
+        $("#form_delete_filename").attr("action","/samples?sampleid="+fid);  // 삭제할 내용 적용
+        //$("#mb_yesno").modal({fadeDuration: 100});
+
+        $("#mb_yesno").removeClass("hidden");
+        $("#mb_yesno-bg").removeClass("hidden");  
+    });
+    */
+    // 버튼 클릭시 Check all
+    $('#checkall').click(function() {   
+        var checkBtn = $(this);
+        const cboxs = document.getElementsByName("row_checkbox")
+        for(let i=0; i<cboxs.length;i++){
+            cboxs[i].checked = checkBtn[0].checked;
+        }
+    });
+
+    // 버튼 클릭시 Check된 것 삭제
+    $("#bt_sample_delete").click(function(){  
+        var j=0;
+        var sidArr="";
+        var idArr = new Array();	// 배열 선언
+        const cboxs = document.getElementsByName("row_checkbox")
+
+        for(let i=0; i<cboxs.length;i++){
+            if(cboxs[i].checked){
+                idArr[j] = cboxs[i].parentElement.parentElement.children[1].textContent
+                //sidArr = sidArr + (j>0?"&":"") +"sampleid="+String(idArr[j]);
+                j++;
+            }
+        }
+        //debugger;
+        //console.log("클릭한 Row의 모든 데이터 : "+idArr.text());
+        if(idArr.length > 0) {
+            $("#lb_delete_datafile_name").text('Analysis ID: '+String(idArr));  // 메세지 확인용
+            //$("#form_delete_filename").attr("action","/samples/deltesample{{search_link}}");  // 삭제할 내용 적용
+            $("#mb_yesno").removeClass("hidden");
+            $("#mb_yesno-bg").removeClass("hidden");  
+        }
+    });    
+
+    $("#bt_deletefile_yes").click(function(){   
+        var j=0;   
+        var idArr = new Array();	// 배열 선언
+        const cboxs = document.getElementsByName("row_checkbox")
+
+        for(let i=0; i<cboxs.length;i++){
+            if(cboxs[i].checked){
+                idArr[j] = cboxs[i].parentElement.parentElement.children[1].textContent
+                j++;
+            }
+        }
+        toggcleModal('mb_yesno')
+        if(idArr.length > 0) {
+            var f = document.createElement("form"); // form 엘리멘트 생성
+            f.setAttribute("id","deletesamplelist"); // method 속성을 id 설정
+            f.setAttribute("method","post"); // method 속성을 post로 설정
+            f.setAttribute("action","/samples/deltesample{{search_link}}"); // submit했을 때 무슨 동작을 할 것인지 설정
+            document.body.appendChild(f); // 현재 페이지에 form 엘리멘트 추가 
+            //debugger;
+            for(let i=0; i<idArr.length;i++){
+                var val = document.createElement("input"); // input 엘리멘트 생성 
+                val.setAttribute("type","text"); // type 속성을 text으로 설정
+                val.setAttribute("class","hidden"); // type 속성을 hidden으로 설정
+                val.setAttribute("id","sampleid"); // name 속성을 'm_nickname'으로 설정 
+                val.setAttribute("onsubmit","return false");
+                val.setAttribute("name","sampleid"); // name 속성을 'm_nickname'으로 설정 
+                val.setAttribute("value",idArr[i]); // value 속성을 neilong에 담겨있는 값으로 설정 
+                f.appendChild(val); // form 엘리멘트에 input 엘리멘트 추가 
+            }
+            f.submit(); // form 태그 서브밋 실행     
+        }
+    });
+
+    // 버튼 클릭시 Check된 것 실행
+    $("#bt_sample_run").click(function(){  
+        var j=0;
+        var sidArr="";
+        var idArr = new Array();	// 배열 선언
+        const cboxs = document.getElementsByName("row_checkbox")
+
+        for(let i=0; i<cboxs.length;i++){
+            if(cboxs[i].checked){
+                idArr[j] = cboxs[i].parentElement.parentElement.children[1].textContent
+                j++;
+            }
+        }
+
+        if(idArr.length > 0) {
+            //debugger;
+            var f = document.createElement("form"); // form 엘리멘트 생성
+            f.setAttribute("method","post"); // method 속성을 post로 설정
+            f.setAttribute("action","/samples/startstoplist{{search_link}}"); // submit했을 때 무슨 동작을 할 것인지 설정
+            document.body.appendChild(f); // 현재 페이지에 form 엘리멘트 추가 
+
+            for(let i=0; i<idArr.length;i++){
+                var val = document.createElement("input"); // input 엘리멘트 생성 
+                val.setAttribute("type","text"); // type 속성을 text으로 설정
+                val.setAttribute("class","hidden"); // type 속성을 hidden으로 설정
+                val.setAttribute("id","sampleid"); // name 속성을 'm_nickname'으로 설정 
+                val.setAttribute("name","sampleid"); // name 속성을 'm_nickname'으로 설정 
+                val.setAttribute("value",idArr[i]); // value 속성을 neilong에 담겨있는 값으로 설정 
+                f.appendChild(val); // form 엘리멘트에 input 엘리멘트 추가 
+            }
+            f.submit(); // form 태그 서브밋 실행
+        }
+    });     
+
+    
+    // Table edit 버튼 클릭시 Row 값 가져오기
+    $(".bt_edit_sample").click(function(){  
+        var str = ""
+        var tdArr = new Array();	// 배열 선언
+        var checkBtn = $(this);
+
+        // checkBtn.parent() : checkBtn의 부모는 <td>이다.
+        // checkBtn.parent().parent() : <td>의 부모이므로 <tr>이다.
+        var tr = checkBtn.parent().parent(); 
+        var td = tr.children();
+
+        console.log("클릭한 Row의 모든 데이터 : "+tr.text());
+        var fid = td.eq(1).text();
+        var sid = td.eq(2).text();
+        var r1 = td.eq(3).text();
+        var r2 = td.eq(4).text();
+        var pid = td.eq(11).text();
+        var pna = td.eq(12).text();
+        var srdt = td.eq(13).text();
+        var sqdt = td.eq(14).text();
+        var lpdt = td.eq(15).text();
+
+
+        console.log("edit : "+$(this).text());
+        console.log("edit : "+fid,sid,r1,r2,pid,pna,srdt,sqdt,lpdt);
+        $("#SampleTitle").text("Sample edit");
+        $("#AnalysisID").val(fid)
+        $("#PatientID").val(pid);
+        $("#PatientName").val(pna);
+        $("#SampleDataID").val(sid);
+        $("#RecvDate").val(srdt);
+        $("#LibPrepDate").val(lpdt);
+        $("#SeqDate").val(sqdt);
+        $("#Analysis_R1name").val(r1);
+        $("#Analysis_R2name").val(r2);
+        $("#mb_sampleadd").removeClass("hidden");
+        $("#mb_sampleadd-bg").removeClass("hidden");  
+    });
+
+    $('#Analysis_R1name').click(function() {       // 파일 선택리스트 창 표시
+        console.log('select' + $(this).val());
+        $("#R1R2Select").val("1")
+        $("#mb_fastq_filelistInput").val("")
+        $("#mb_fileselect").removeClass("hidden");
+        $("#mb_fileselect-bg").removeClass("hidden");  
+    });
+
+    $('#Analysis_R2name').click(function() {       // 파일 선택리스트 창 표시
+        console.log('select' + $(this).val());
+        $("#R1R2Select").val("2")
+        $("#mb_fastq_filelistInput").val("")
+        $("#mb_fileselect").removeClass("hidden");
+        $("#mb_fileselect-bg").removeClass("hidden");  
+    });
+
+    
+    $("#bt_sample_newadd_show").click( function() {         // sample 신규등록창 표출
+        console.log("bt_sample_newadd : "+$(this).text());
+
+        $("#SampleTitle").text("Sample registration");
+        $("#AnalysisID").val(" ");
+        $("#RecvDate").val("01/01/2000");
+        $("#LibPrepDate").val("01/01/2000");
+        $("#SeqDate").val("01/01/2000");
+        $("#PatientID").val("");
+        $("#PatientName").val("");
+        $("#SampleDataID").val("");
+        $("#Analysis_R1name").val("");
+        $("#Analysis_R2name").val("");
+        $("#form_add_sample").attr("action","/samples/addsample");  // 추가할 주소
+        $("#mb_sampleadd").removeClass("hidden");
+        $("#mb_sampleadd-bg").removeClass("hidden");  
+    });
+
+
+    $("#fastq_filelist a").click(function(){
+        console.log($(this).text()+", "+$(this).parent().val());    // 선택 filename과 Datafile id
+        console.log($("#r1r2select").val());    // 선택 filename과 Datafile id
+        //debugger;
+        if($("#R1R2Select").val() == "1"){
+            $("#Analysis_R1name").val($(this).text())
+        }else{
+            $("#Analysis_R2name").val($(this).text())
+        }
+        toggcleModal('mb_fileselect')
+    });
+    
+    
+    $("#bt_samplesubmit").click( function() {         // sample 신규등록 전송
+        console.log("bt_sample_newadd : "+$(this).text());
+        console.log("pa id : "+$("#PatientID").val());
+        if( $("#AnalysisID").val() == '' )
+             $("#AnalysisID").val(" ");
+        if( $("#RecvDate").val() == '' )
+            $("#RecvDate").val("01/01/2000");
+        if( $("#LibPrepDate").val() == '' )
+            $("#LibPrepDate").val("01/01/2000");
+        if( $("#SeqDate").val() == '' )
+            $("#SeqDate").val("01/01/2000");
+        if( $("#PatientID").val() == '' )
+            $("#PatientID").val(' ')
+        if( $("#PatientName").val() == '' )
+            $("#PatientName").val(' ')
+        if( $("#SampleDataID").val() == '' )
+            $("#SampleDataID").val(' ')
+        if( $("#Analysis_R1name").val() == '' )
+            $("#Analysis_R1name").val(' ')
+        if( $("#Analysis_R2name").val() == '' )
+            $("#Analysis_R2name").val(' ')
+
+        toggcleModal('mb_sampleadd')
+
+        $("#form_add_sample").submit();            
+    });
+
+
+    function xlsxfiledownload() {
+        var element = document.createElement('a');
+        element.setAttribute('href','/static/Batch_example.xlsx');
+        element.setAttribute('download','Batch_example.xlsx' );
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      }
+
+    function exportsampledownload() {
+        const s = $("#search_name").val();
+
+        var f = document.createElement("form"); // form 엘리멘트 생성
+        f.setAttribute("method","post"); // method 속성을 post로 설정
+        f.setAttribute("action","/samples/sampleExport"); // submit했을 때 무슨 동작을 할 것인지 설정
+        document.body.appendChild(f); // 현재 페이지에 form 엘리멘트 추가 
+
+        var val = document.createElement("input"); // input 엘리멘트 생성 
+        val.setAttribute("type","text"); // type 속성을 text으로 설정
+        val.setAttribute("class","hidden"); // type 속성을 hidden으로 설정
+        val.setAttribute("id","exportdata"); 
+        val.setAttribute("name","exportdata"); 
+        val.setAttribute("value",s); 
+        f.appendChild(val); // form 엘리멘트에 input 엘리멘트 추가 
+        f.submit(); // form 태그 서브밋 실행     
+        document.body.removeChild(f);
+    }
+  
+
+
+
+</script>
+
+  
+{% endblock %}

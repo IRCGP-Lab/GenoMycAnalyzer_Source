@@ -1,0 +1,281 @@
+{% extends "base.html" %} {% block title %}
+<title>GenoMycAnalyzer</title>
+{% endblock %} {% block content %}
+
+<!-- ====== Sub Navbar Section Start -->
+<!-- <button type="button" class="absolute w-16 text-sm text-white transition-all bg-blue-500 rounded-lg cursor-pointer h-7 right-2 hover:bg-blue-900 top-1" onclick="location.href=/datafile{{search_name}}">Search</button>  -->
+<section class="py-5 px-7">
+  <div class="col-start-1 row-start-1 row-end-2 bg-white box group rounded-xl">
+    <div class="flex items-end justify-between w-auto h-auto space-y-1">
+      <div class="h-6 ml-2 font-bold w-30 item">
+        <span class="border bg-teal-600 px-0.5"></span>
+        <span class="ml-1">SAMPLE DATA LIST</span>
+      </div>
+    </div>
+
+    <div class="flex px-2 mt-2 mb-2 ml-2 mr-2 border-t border-gray-300"></div>
+      <div class="flex flex-row justify-between space-x-2">
+        <!-- Add Button -->
+        <div class="flex ml-2 space-x-1">
+          <button id="bt_data_fileadd" type="button" onclick="loadfile()" class="rounded-xl h-8 px-5 pt-1.5 pb-2 bg-blue-600 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center">&#x254A; ADD</button>
+          <button id="bt_data_delete" type="button" class="rounded-xl h-8 px-5 pt-1.5 pb-2 bg-blue-600 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center">&#128465; DELETE</button>
+        </div>
+        <!-- Search box -->
+        <div class="relative">
+          <form action="{{search_name}}">
+            <div class="search">
+              <input type="text" class="pl-4 pr-20 mt-0 text-sm transition-all border rounded-lg outline-none h-9 w-60 focus:border-blue-600" placeholder="Search filename" name="search_name" value="" />
+              <button class="absolute w-16 text-sm text-white transition-all bg-blue-500 rounded-lg cursor-pointer h-7 right-2 hover:bg-blue-900 top-1" type="submit">Search</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Data file table -->
+      <table class="w-full mt-2 text-sm text-center text-gray-900 bg-white border-separate shadow-none">
+        <thead>
+          <tr>
+            <th class="w-1/12 p-2 text-white bg-blue-500">
+              DELETE
+              <input type="checkbox" id="checkall" name="checkall" />
+            </th>
+            <th class="w-2/12 p-2 text-white bg-blue-500"><a href="{{order_id}}">ID</a></th>
+            <th class="w-5/12 p-2 text-white bg-blue-500"><a href="{{order_name}}">FILE NAME</a></th>
+            <th class="w-2/12 p-2 text-white bg-blue-500"><a href="{{order_size}}">FILE SIZE</a></th>
+            <th class="w-2/12 p-2 text-white bg-blue-500"><a href="{{order_date}}">CREATED DATE</a></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for file in files %} 
+            {% if (loop.index % 2)==1 %}
+            <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 bg-blue-200 text-blue-900">
+            {% else %}
+            </tr>
+            <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 bg-blue-100 text-blue-900">
+            {% endif %}
+            <!-- <td class="p-1"><a href="#" class="mr-2 text-base bt_delete_datafile">&#x274E;</a></td> -->
+            <td class="p-1">
+              <input type="checkbox" class="mr-2 text-base" name="row_checkbox" />
+            </td>
+            <td class="p-1">{{file.id}}</td>
+            <td class="p-1">{{file.filename}}</td>
+            <td class="p-1">{{file.filesize}}</td>
+            <td class="p-1">{{file.created_at}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  <!-- User delete message box -->
+  <form id="form_delete_filename" class="modal" action="" method="POST">
+    <div class="fixed inset-0 z-40 hidden bg-black opacity-40" id="mb_yesno-bg"></div>
+    <div id="mb_yesno" class="fixed z-50 hidden px-8 py-6 space-y-5 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md top-1/2 left-1/2 w-200 drop-shadow-lg">
+      <h1 class="text-2xl font-semibold">Confirm File Delete</h1>
+      <div class="py-5 border-t border-b border-gray-300">
+        <p>Are you sure you want to delete?</p>
+        <p id="lb_delete_datafile_name" class="mt-2 text-center text-red-800 bt-10">FILE</p>
+      </div>
+      <div class="ml-1">
+        <!-- This button is used to close the dialog -->
+        <button href="" id="bt_deletefile_cancel" class="px-5 py-2 text-white bg-indigo-500 rounded-md cursor-pointer hover:bg-indigo-700" onclick="toggcleModal('mb_yesno')">Cancel</button>
+        <button href="" id="bt_deletefile_yes" class="px-5 py-2 ml-2 text-white bg-red-500 rounded-md cursor-pointer hover:bg-indigo-700">Yes</button>
+      </div>
+    </div>
+  </form>
+
+  <form method="post" action="" enctype="multipart/form-data">
+    <div class="fixed hidden inset-0 z-30 bg-black opacity-40"  id="mb_uploadfastq-bg"></div>
+    <div id="mb_uploadfastq" class="panel panel-default fixed hidden z-40 px-8 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md top-1/2 left-1/2 w-400 drop-shadow-lg">
+    <div class="panel panel-default " style="margin-top:20px;width:630px;">
+        <div class="panel-heading"><b>FILE UPLOAD</b></div>
+        <div class="panel-body">
+            <input type="file" name="uploadfiles" id="uploadfiles" multiple class="hidden" accept=".fastq.gz"/>
+            <p id="loaded_n_name"></p>
+            <p id="loaded_n_total"></p>
+            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700"><div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div></div>
+        </div>
+        <br>
+        <button style="float:right;" type="button" onclick="cancelfile()" class="rounded-xl h-8 px-5 pt-1.5 pb-2 mb-4 bg-blue-600 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-150 ease-in-out flex align-center">Cancel</button>
+    </div>
+</form>
+
+</section>
+
+{% endblock %} {% block scripts %}
+<script type="text/javascript">
+  var sendName = "";
+  var selIdx = 0;
+  var selCnt = 0;
+  var upcancel = false;
+  var upajax = null;
+  document.addEventListener("DOMContentLoaded", init, false);
+
+  // 버튼 클릭시 Check all
+  $("#checkall").click(function () {
+    var checkBtn = $(this);
+    const cboxs = document.getElementsByName("row_checkbox");
+    for (let i = 0; i < cboxs.length; i++) {
+      cboxs[i].checked = checkBtn[0].checked;
+    }
+  });
+
+  // 버튼 클릭시 Check된 것 삭제
+  $("#bt_data_delete").click(function () {
+    var j = 0;
+    var idArr = new Array(); // 배열 선언
+    const cboxs = document.getElementsByName("row_checkbox");
+
+    for (let i = 0; i < cboxs.length; i++) {
+      if (cboxs[i].checked) {
+        idArr[j] = cboxs[i].parentElement.parentElement.children[1].textContent;
+        j++;
+      }
+    }
+    //debugger;
+    if (idArr.length > 0) {
+      $("#lb_delete_datafile_name").text("Analysis ID: " + String(idArr)); // 메세지 확인용
+      $("#mb_yesno").removeClass("hidden");
+      $("#mb_yesno-bg").removeClass("hidden");
+    }
+  });
+
+  $("#bt_deletefile_yes").click(function () {
+    var j = 0;
+    var idArr = new Array(); // 배열 선언
+    const cboxs = document.getElementsByName("row_checkbox");
+
+    for (let i = 0; i < cboxs.length; i++) {
+      if (cboxs[i].checked) {
+        idArr[j] = cboxs[i].parentElement.parentElement.children[1].textContent;
+        j++;
+      }
+    }
+    toggcleModal("mb_yesno");
+    if (idArr.length > 0) {
+      var f = document.createElement("form"); // form 엘리멘트 생성
+      f.setAttribute("id", "deletedatalist"); // method 속성을 id 설정
+      f.setAttribute("method", "post"); // method 속성을 post로 설정
+      f.setAttribute("action", "/datafiles/deletefile{{search_name}}"); // submit했을 때 무슨 동작을 할 것인지 설정
+      document.body.appendChild(f); // 현재 페이지에 form 엘리멘트 추가
+      //debugger;
+      for (let i = 0; i < idArr.length; i++) {
+        var val = document.createElement("input"); // input 엘리멘트 생성
+        val.setAttribute("type", "text"); // type 속성을 text으로 설정
+        val.setAttribute("class", "hidden"); // type 속성을 hidden으로 설정
+        val.setAttribute("id", "sampleid"); // name 속성을 'm_nickname'으로 설정
+        val.setAttribute("onsubmit", "return false");
+        val.setAttribute("name", "sampleid"); // name 속성을 'm_nickname'으로 설정
+        val.setAttribute("value", idArr[i]); // value 속성을 neilong에 담겨있는 값으로 설정
+        f.appendChild(val); // form 엘리멘트에 input 엘리멘트 추가
+      }
+      f.submit(); // form 태그 서브밋 실행
+    }
+  });
+
+  function toggcleModal(modalid) {
+    event.preventDefault();
+    console.log("func:" + modalid);
+    document.getElementById(modalid).classList.toggle("hidden");
+    document.getElementById(modalid + "-bg").classList.toggle("hidden");
+  }
+
+  function init() {
+    document.querySelector("#uploadfiles").addEventListener("change", handleFileSelect, false);
+    selIdx = 0;
+    selCnt = 0;
+    upcancel = false;
+    //debugger;
+  }
+
+  function loadfile() {
+    filebt = document.getElementById("uploadfiles");
+    filebt.click();
+  }
+
+  function uploadFile() {
+    // get the file
+    if (selIdx >= selCnt || upcancel) {
+      toggcleModal('mb_uploadfastq');
+      return;
+    }
+    filebt = document.getElementById("uploadfiles");
+    event.preventDefault();
+
+    var file = filebt.files[selIdx];
+    selIdx = selIdx + 1;
+
+    //print file details
+    sendName = file.name;
+    console.log("File :", file.name, " ", file.size, "", file.type);
+
+    var formdata = new FormData(); 
+    formdata.enctype='multipart/form-data';
+    formdata.method='post';
+    formdata.action='upload';
+    formdata.append("files", file);
+
+    upajax = new XMLHttpRequest(); //create XHR object to send request
+    upajax.upload.addEventListener("progress", progressHandler);     // add progress event to find the progress of file upload
+    upajax.addEventListener("readystatechange", uploadfinishHandler); // add finish upload event
+    upajax.open("post", "/datafiles/upload", true); // initializes a newly-created request  // replace with your file URL
+    upajax.send(formdata); // send request to the server
+  }
+
+  function cancelfile() {
+    event.preventDefault();
+    toggcleModal('mb_uploadfastq');
+    upcancel = true;
+    if (upajax != null) upajax.abort();
+  }
+
+  function convert_size(size_bytes) {
+    if (size_bytes == 0) return "0B";
+    size_name = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    i = Math.floor(Math.log(size_bytes) / Math.log(1024));
+    p = Math.pow(1024, i);
+    s = Math.round((size_bytes / p) * 100) / 100;
+    let rt = "";
+    rt = parseFloat(s).toFixed(2);
+    rt = rt + size_name[i];
+    return rt;
+  }
+
+  function progressHandler(ev) {
+    let totalSize = ev.total; // total size of the file in bytes
+    let loadedSize = ev.loaded; // loaded size of the file in bytes
+    var percent = (ev.loaded / ev.total) * 100; // calculate percentage
+    //debugger;
+    document.getElementById("loaded_n_name").innerHTML = selIdx.toString() + "/" + selCnt.toString() + " files : " + sendName;
+    document.getElementById("loaded_n_total").innerHTML = "Uploaded " + convert_size(loadedSize) + " (" + parseFloat(percent).toFixed(2) + "%)";
+    document.getElementById("progressBar").style.width = Math.round(percent) + "%";
+  }
+
+  function uploadfinishHandler(ev) {
+    if(upajax.readyState == 4){
+      if(upcancel || (selIdx >= selCnt)) {
+        //setTimeout(function(){location.reload();}, 500);
+        toggcleModal('mb_uploadfastq');
+      }else{
+        uploadFile();
+      }            
+    }
+  }
+
+  function handleFileSelect(e) {
+    debugger;
+    if (!e.target.files) return;
+    event.preventDefault();
+    selIdx = 0;
+    selCnt = e.target.files.length;
+    upcancel = false;
+
+    document.getElementById("loaded_n_name").innerHTML = "1/" +selCnt.toString() + " files : ";
+    document.getElementById("loaded_n_total").innerHTML = "Uploaded 0 (0%)";
+    document.getElementById("progressBar").style.width = "0%";    
+    toggcleModal('mb_uploadfastq');
+    uploadFile();
+  }
+</script>
+
+{% endblock %}

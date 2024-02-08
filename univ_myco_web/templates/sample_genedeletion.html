@@ -1,0 +1,72 @@
+
+{% extends "base.html" %}
+
+
+{% block title %}
+  <title>GenoMycAnalyzer</title>
+{% endblock %}
+
+{% block content %}
+
+
+<section class="bg-slate-100">
+
+    <nav class="flex flex-wrap items-center justify-between p-2 bg-white teal-100">
+        <div class="flex-grow block w-full lg:flex lg:w-auto lg:items-center">
+        <div class="text-sm lg:flex-grow">
+            <a href="/samples/summary/{{SampleID}}" class="block mt-4 ml-4 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Summary </a>
+            <a href="/samples/statistics/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Statistics&QC </a>
+            <a href="/samples/variants/{{SampleID}}"     class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Variants </a>
+            <a href="/samples/genedeletion/{{SampleID}}" class="block mt-4 ml-6 text-orange-800 hover:text-yellow-600 lg:mt-0 lg:inline-block">Large deletion </a>
+            <a href="/samples/rav/{{SampleID}}"          class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> RAV </a>
+            <a href="/samples/report/{{SampleID}}" class="block mt-4 ml-6 text-teal-700 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Report </a>
+        </div>
+        </div>
+    </nav>
+    <div class="h-0.5 bg-gradient-to-r from-cyan-200 to-blue-300"></div>
+   
+        <div class="col-start-1 row-start-1 row-end-2 p-2 bg-white box group rounded-xl">
+        <div class="flex items-end justify-between w-auto h-auto space-y-1">
+            <div class="h-6 ml-2 font-bold w-30 item">
+            <span class="border bg-teal-600 px-0.5"></span>
+            <span class="ml-1">Large deletion</span>
+            </div>
+            <button id="bt_rav_export" class="px-4 mr-2 text-gray-500 border rounded border-stone-400 hover:border-transparent hover:bg-sky-200 hover:text-teal-700 lg:mt-0">Export</button>
+            <!-- Search box -->
+            <!-- 추후 추가 검토-->
+        </div>
+        <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+        
+        <!-- Sample Basic Statisics table -->
+        <table class="w-full text-sm text-center text-gray-900 bg-white border-separate shadow-none">
+            <thead>
+            <tr>
+                <th class="w-auto p-1 text-white bg-blue-500">Position</th>
+                <th class="w-[50%] p-1 text-white bg-blue-500">Gene</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for lt in reseultlt %} 
+            {% if(loop.index % 2) %}
+            <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 text-blue-900 bg-blue-100">
+            {% else %}
+            <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 text-blue-900 bg-blue-200">
+            {% endif %}
+                <td class="p-1" onClick="window.open('/samples/igvview/{{SampleID}}?locus={{lt.posmin}}&locusmax={{lt.posmax}}','','');">{{lt.position}}</td>
+                <td class="p-1">{{lt.gene}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% if Coveragedepth <= 100 %}
+            <p class = "text-sm"> - Because the data did not meet QC criteria, large deletion analysis was not performed.</p>
+        {% endif %}
+        </div>
+    </div>
+</section>
+       
+{% endblock %}
+
+{% block scripts %} 
+
+{% endblock %}

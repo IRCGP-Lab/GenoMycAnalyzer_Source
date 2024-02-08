@@ -1,0 +1,239 @@
+
+{% extends "base.html" %}
+
+
+{% block title %}
+  <title>GenoMycAnalyzer</title>
+{% endblock %}
+
+{% block content %}
+
+<section class="bg-slate-100">
+  <nav class="flex flex-wrap items-center justify-between p-2 bg-white teal-100">
+    <div class="flex-grow block w-full lg:flex lg:w-auto lg:items-center">
+      <div class="text-sm lg:flex-grow">
+        <a href="/samples/summary/{{SampleID}}" class="block mt-4 ml-4 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Summary </a>
+        <a href="/samples/statistics/{{SampleID}}" class="block mt-4 ml-6 text-orange-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Statistics&QC </a>
+        <a href="/samples/variants/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Variants </a>
+        <a href="/samples/genedeletion/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block">Large deletion </a>
+        <a href="/samples/rav/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> RAV </a>
+        <a href="/samples/report/{{SampleID}}" class="block mt-4 ml-6 text-teal-700 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Report </a>
+      </div>
+    </div>
+  </nav>
+  <div class="h-0.5 bg-gradient-to-r from-cyan-200 to-blue-300"></div>
+
+  <div class="grid grid-flow-row grid-cols-2 grid-rows-1 gap-1 mt-1 ml-1 mr-1 overflow-hidden">
+    <!-- Basic Statistic page -->
+    <div class="col-start-1 row-start-1 row-end-2 p-2 bg-white box group rounded-xl">
+      <div class="flex items-end justify-between w-auto h-auto space-y-1">
+        <div class="h-6 ml-2 font-bold w-30 item">
+          <span class="border bg-teal-600 px-0.5"></span>
+          <span class="ml-1">Basic Statistics</span>
+        </div>
+      </div>
+      <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+      
+      <!-- Sample Basic Statisics table -->
+      <table class="w-full text-sm text-center text-gray-900 bg-white border-separate shadow-none">
+        <thead>
+          <tr>
+            <th class="w-1/6 p-1 text-white bg-blue-500">Data</th>
+            <th class="p-1 text-white bg-blue-500">Item</th>
+            <th class="w-auto p-1 text-white bg-blue-500">Value</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">Raw FASTAQ</td>
+            <td class="p-1">Total reads<br>Total bases<br>Q30 readS(%)</td>
+            <td class="p-1">{{RawFastQRead}}<br>{{RawFastQBase}} bp<br>{{RawFastQ30}}</td>
+          </tr>
+          <tr class="text-blue-900 bg-blue-100">
+            <td class="p-1">Trimmed FASTAQ</td>
+            <td class="p-1">Total reads<br>Total bases<br>Q30 readS(%)</td>
+            <td class="p-1">{{TrimFastQRead}}<br>{{TrimFastQBase}} bp<br>{{TrimFastQ30}}</td>
+          </tr>
+          <!--
+          <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">Alignment to the spike-in controls</td>
+            <td class="p-1">Mapped reads(SI-1)<br>Mapped reads(SI-2)<br>Mapped reads(SI-2)</td>
+            <td class="p-1">{{SpikeMapRead1}}<br>{{SpikeMapRead2}}<br>{{SpikeMapRead3}}</td>
+          </tr>
+          -->
+          <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">Species prediction</td>
+            <td class="p-1">Predicted species<br>Mapped reads(total species)<br>Mapped reads(predicted species)<br>Mapped rate(predicted species)</td>
+            <td class="p-1"><i>{{SpeciesPredName}}</i><br>{{SpeciesPredMapTot}}<br>{{SpeciesPredMapRead}}<br>{{SpeciesPredMapRate}}</td>
+          </tr>
+          <tr class="text-blue-900 bg-blue-100">
+            <td class="p-1">Alignment to the reference genome (H37Rv)</td>
+            {% if(ReadIntCtlOp == 'True') %}
+              <!--
+              <td class="p-1">Host genome (human) filtered reads<br>Duplicated reads<br>Duplication rate<br>Mapped reads (total)<br>Mapped rate (total)<br>Read length (mean)<br>Insert size (mean)<br>Base quality (mean)<br>Mapping quality (mean)<br>Mapped reads (on-target)<br>Mapped rate (on-target)<br>Coverage depth (on-target)<br>1X coverage rate (on-target)<br>50X coverage rate (on-target)<br>100X coverage rate (on-target)</td>
+              <td class="p-1">{{AlignHostGenomeRead}}<br>{{AlignDupRead}}<br>{{AlignDupRate}}%<br>{{AlignMapReadTot}}<br>{{AlignMapRateTot}}%<br>{{AlignReadLen}}<br>{{AlignInsert}}<br>{{AlignBaseQuality}}<br>{{AlignMapQuality}}<br>{{AlignMapReadTarget}}<br>{{AlignMapRateTarget}}%<br>{{AlignCoverage}}<br>{{Align1xCoverage}}%<br>{{Align50xCoverage}}%<br>{{Align100xCoverage}}%</td>        
+              -->
+              <td class="p-1">Host genome (human) filtered reads<br>Duplicated reads<br>Duplication rate<br>Mapped reads (total)<br>Mapped rate (total)<br>Read length (mean)<br>Insert size (mean)<br>Base quality (mean)<br>Mapping quality (mean)<br>Coverage depth<br>1X coverage rate<br>50X coverage rate<br>100X coverage rate</td>
+              <td class="p-1">{{AlignHostGenomeRead}}<br>{{AlignDupRead}}<br>{{AlignDupRate}}<br>{{AlignMapReadTot}}<br>{{AlignMapRateTot}}<br>{{AlignReadLen}}<br>{{AlignInsert}}<br>{{AlignBaseQuality}}<br>{{AlignMapQuality}}<br>{{AlignCoverage}}<br>{{Align1xCoverage}}<br>{{Align50xCoverage}}<br>{{Align100xCoverage}}</td>        
+            {% else %}
+              <td class="p-1">Duplicated reads<br>Duplication rate<br>Mapped reads (total)<br>Mapped rate (total)<br>Read length (mean)<br>Insert size (mean)<br>Base quality (mean)<br>Mapping quality (mean)<br>Coverage depth<br>1X coverage rate<br>50X coverage rate<br>100X coverage rate</td>
+              <td class="p-1">{{AlignDupRead}}<br>{{AlignDupRate}}<br>{{AlignMapReadTot}}<br>{{AlignMapRateTot}}<br>{{AlignReadLen}}<br>{{AlignInsert}}<br>{{AlignBaseQuality}}<br>{{AlignMapQuality}}<br>{{AlignCoverage}}<br>{{Align1xCoverage}}<br>{{Align50xCoverage}}<br>{{Align100xCoverage}}</td>
+            {% endif %}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Sample QC Controll table -->
+    <div class="col-start-2 row-start-1 row-end-2 p-2 mb-1 bg-white box group rounded-xl">
+      <div class="flex items-end justify-between w-auto h-auto space-y-1">
+        <div class="h-6 ml-2 font-bold w-30 item">
+          <span class="border bg-teal-600 px-0.5"></span>
+          <span class="ml-1">Quality Control</span>
+        </div>
+      </div>
+      <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+
+      <!-- QC box -->
+      <table class="w-full text-sm text-center text-gray-900 bg-white border-separate shadow-none">
+        <thead>
+          <tr>
+            <th class="w-auto p-1 text-white bg-blue-500">Item</th>
+            <th class="w-2/12 text-white bg-blue-500">Criteria</th>
+            <th class="w-2/12 p-1 text-white bg-blue-500">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">Total reads number in raw FASTQ</td>
+            <td class="p-1">> 400,000</td>
+            <td class="p-1">{{QcTotReadFastQ}}</td>
+          </tr>
+          <tr class="text-blue-900 bg-blue-100">
+            <td class="p-1">Q30 reads rate in trimmed FASTQ</td>
+            <td class="p-1">> 80%</td>
+            <td class="p-1">{{QcQ30ReadFastQ}}</td>
+          </tr>
+          <!--
+          <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">Average mapped reads in spike-in controls</td>
+            <td class="p-1">> 200</td>
+            <td class="p-1">{{QcAvgMapRead}}</td>
+          </tr>
+          -->
+          <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">Mapped reads in total species</td>
+            <td class="p-1">> 200</td>
+            <td class="p-1">{{QcMapReadSpecies}}</td>
+          </tr>
+          <tr class="text-blue-900 bg-blue-100">
+            <td class="p-1">Mapped rate in predicted species</td>
+            <td class="p-1">> 10%</td>
+            <td class="p-1">{{QcMapRateSpecies}}</td>
+          </tr>
+          <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">Coverage depth</td>
+            <td class="p-1">> 100</td>
+            <td class="p-1">{{QcCoverageDeep}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <!-- Lineage table -->
+      <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+      <div class="flex items-end justify-between w-auto h-auto space-y-1">
+        <div class="h-6 ml-2 font-bold w-30 item">
+          <span class="border bg-teal-600 px-0.5"></span>
+          <span class="ml-1">Lineage & Spoligotype for <i>M. tuberculosis</i></span>
+        </div>
+      </div>
+      <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+      <table class="w-full text-sm text-center text-gray-900 bg-white border-separate shadow-none">
+        <thead>
+          <tr>
+            <th class="w-auto p-1 text-white bg-blue-500">Lineage</th>
+            <th class="w-2/12 text-white bg-blue-500">Spoligotype</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">{{Lineage}}</td>
+            <td class="p-1">{{Spoligotype}} </td>
+          </tr>
+        </tbody>
+      </table>
+  
+
+      <!-- Species prediction statistics table -->
+      <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+      <div class="flex items-end justify-between w-auto h-auto space-y-1">
+        <div class="h-6 ml-2 font-bold w-30 item">
+          <span class="border bg-teal-600 px-0.5"></span>
+          <span class="ml-1">Species prediction statistic</span>
+        </div>
+      </div>
+      <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+      <table class="w-full text-sm text-center text-gray-900 bg-white border-separate shadow-none">
+        <thead>
+          <tr>
+            <th class="w-auto p-1 text-white bg-blue-500">Species name</th>
+            <th class="w-2/12 text-white bg-blue-500">Mapped reads</th>
+            <th class="w-2/12 p-1 text-white bg-blue-500">Mapped rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for lt in species %} 
+          <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">{{lt.name}}</td>
+            <td class="p-1">{{lt.read}}</td>
+            <td class="p-1">{{lt.rate}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Sub-species prediction statistics tabe -->
+      <!--
+      <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+      <div class="flex items-end justify-between w-auto h-auto space-y-1">
+        <div class="h-6 ml-2 font-bold w-30 item">
+          <span class="border bg-teal-600 px-0.5"></span>
+          <span class="ml-1">Sub-species prediction statistic</span>
+        </div>
+      </div>
+      <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+      <table class="w-full text-sm text-center text-gray-900 bg-white border-separate shadow-none">
+        <thead>
+          <tr>
+            <th class="w-auto p-1 text-white bg-blue-500">Species name</th>
+            <th class="w-2/12 text-white bg-blue-500">Mapped reads</th>
+            <th class="w-2/12 p-1 text-white bg-blue-500">Mapped rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for lt in speciessub %} 
+          <tr class="text-blue-900 bg-blue-200">
+            <td class="p-1">{{lt.name}}</td>
+            <td class="p-1">{{lt.read}}</td>
+            <td class="p-1">{{lt.rate}}%</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      -->
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+
+
+
+
+
+{% block scripts %} 
+
+  
+{% endblock %}

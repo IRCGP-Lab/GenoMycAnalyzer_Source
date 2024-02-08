@@ -1,0 +1,41 @@
+<header>
+  <nav class="flex flex-wrap items-center justify-between p-2 teal-100 bg-[#3056D3]">
+    <div class="max-w-full px-7 w-80">
+      <a href="/" class="block mt-4 mr-6 text-base text-white hover:text-slate-300 lg:mt-0 lg:inline-block">
+        GenoMycAnalyzer
+      </a>
+    </div>
+    <div class="flex-grow block w-6 text-right lg:flex lg:w-auto lg:items-center">
+      <div class="text-sm lg:flex-grow">
+        {% if userid %}
+        <a href="/datafiles" class="block mt-4 mr-6 text-base text-white hover:text-slate-300 lg:mt-0 lg:inline-block"> Data</a>
+        <a href="/samples" class="block mt-4 mr-6 text-base text-white hover:text-slate-300 lg:mt-0 lg:inline-block"> Analysis </a>
+        <a href="/help" class="block mt-4 mr-6 text-base text-white hover:text-slate-300 lg:mt-0 lg:inline-block"> Help </a>
+        {% else%}
+        <a href="/help" class="block mt-4 mr-6 text-base text-white hover:text-slate-300 lg:mt-0 lg:inline-block"> Help </a>
+        <a href="/user/login" class="block mt-4 mr-6 text-base text-white hover:text-slate-300 lg:mt-0 lg:inline-block"> Login </a>
+        {% endif %}
+      </div>
+
+      <div class="relative z-10 flex items-center justify-between mr-5">
+        <ul class="justify-end hidden pr-2 sm:flex lg:pr-0">
+          <ul class="relative submenu-item group">
+            {% if userid %}
+            <a href="javascript:void(0)" class="inline-block px-4 py-2 mt-4 text-base leading-none text-white bg-white rounded bg-opacity-20 hover:border-transparent hover:bg-slate-300 hover:text-black lg:mt-0"> {{userid}}</a>
+            <div class="submenu text-center relative top-full left-0 hidden w-[90px] rounded-sm bg-slate-200 p-4 transition-[top] duration-100 group-hover:opacity-100 lg:invisible lg:absolute lg:top-[110%] lg:block lg:opacity-0 lg:shadow-lg lg:group-hover:visible lg:group-hover:top-full">
+              <a href="/user/logout" class="block rounded py-[10px] px-q text-sm text-body-color hover:text-primary">Logout</a>
+              <a href="/user/repassword" class="block rounded py-[10px] -ml-4 w-20 text-sm text-body-color hover:text-primary">Password edit</a>
+              <a href="/samples/config" class="block rounded py-[10px] -ml-4 w-20 text-sm text-body-color hover:text-primary">Analysis Config</a>
+              {% if mananger %}
+              <!-- Manager level -->
+              <a href="#" class="block rounded py-[10px] -ml-4 w-20 text-sm text-body-color hover:text-primary">User edit</a>
+              {% endif %}
+            </div>
+            {% else %}
+            {% endif %}
+          </ul>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>

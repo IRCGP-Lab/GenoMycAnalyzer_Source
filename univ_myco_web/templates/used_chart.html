@@ -1,0 +1,83 @@
+{% extends "base.html" %} {% block title %}
+<title>GenoMycAnalyzer</title>
+{% endblock %} {% block content %}
+
+<!-- Snippet -->
+<section class="flex flex-col justify-center antialiased bg-gray-100 text-gray-600 min-h-screen">
+  <div class="max-w-5xl mx-auto p-4 sm:px-6 h-full">
+    <!-- Chart widget -->
+    <div class="flex flex-col col-span-full xl:col-span-8 bg-white shadow-lg rounded-sm border border-gray-200">
+      <header class="px-5 py-4 border-b border-gray-100 flex items-center">
+        <h2 class="font-semibold text-3xl text-gray-800">Analytics</h2>
+      </header>
+      <div class="px-5 py-1">
+        <div class="flex flex-wrap">
+          <!-- Year -->
+          <div class="flex items-center py-2">
+            <div class="flex items-center text-1xl font-bold text-gray-800 mr-2">Year</div>
+
+            <select name="yearAnalysis" id="yearAnalysis" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" onchange="location = this.value;">
+              {% for item in Years %} {% if item == YSelect %}
+              <option value="chart?Year={{item}}" selected>{{item}}</option>
+              {% else %}
+              <option value="chart?Year={{item}}">{{item}}</option>
+              {% endif %} {% endfor %}
+            </select>
+            <div class="hidden md:block w-px h-8 bg-gray-200 ml-5 mr-5" aria-hidden="true"></div>
+          </div>
+
+          <!-- Total users -->
+          <div class="flex items-center py-2">
+            <div class="mr-5">
+              <div class="flex items-center text-3xl font-bold text-gray-800 mr-2">{{Totusers}}</div>
+              <div class="text-sm text-gray-500">Number of registered users</div>
+            </div>
+            <div class="hidden md:block w-px h-8 bg-gray-200 mr-5" aria-hidden="true"></div>
+          </div>
+
+          <!-- uses hits -->
+          <div class="flex items-center py-2">
+            <div class="mr-5">
+              <div class="flex items-center text-3xl font-bold text-gray-800 mr-2">{{TotProcessing}}</div>
+              <div class="text-sm text-gray-500">Number of analyses this year</div>
+            </div>
+            <div class="hidden md:block w-px h-8 bg-gray-200 mr-5" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Chart built with Chart.js 3 -->
+      <div class="flex-grow">
+        <canvas class="p-10" id="chartLine" width="2000" height="1000"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %} {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Chart line -->
+<script>
+  const labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October","November","December"];
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: "Processing Number",
+        backgroundColor: "hsl(252, 82.9%, 67.8%)",
+        borderColor: "hsl(252, 82.9%, 67.8%)",
+        //data: [0, 10, 5, 2, 20, 30, 45,0, 10, 5, 2, 20, 30, 46],
+        data: {{Months}}
+      },
+    ],
+  };
+
+  const configLineChart = {
+    type: "line",
+    data,
+    options: {},
+  };
+
+  var chartLine = new Chart(document.getElementById("chartLine"), configLineChart);
+</script>
+{% endblock %}

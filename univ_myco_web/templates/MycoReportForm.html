@@ -1,0 +1,588 @@
+{% extends "base.html" %} {% block title %}
+<title>GenoMycAnalyzer</title>
+{% endblock %} {% block content %}
+<section class="bg-slate-100">
+  <nav class="flex flex-wrap items-center justify-between p-2 bg-white teal-100">
+    <div class="flex-grow block w-full lg:flex lg:w-auto lg:items-center">
+      <div class="text-sm lg:flex-grow">
+        <a href="/samples/summary/{{SampleID}}" class="block mt-4 ml-4 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Summary </a>
+        <a href="/samples/statistics/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Statistics&QC </a>
+        <a href="/samples/variants/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Variants </a>
+        <a href="/samples/genedeletion/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block">Large deletion  </a>
+        <a href="/samples/rav/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> RAV </a>
+        <a href="/samples/report/{{SampleID}}" class="block mt-4 ml-6 text-orange-700 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Report </a>
+      </div>
+    </div>
+  </nav>
+  <div class="h-0.5 bg-gradient-to-r from-cyan-200 to-blue-300"></div>
+
+  <!-- Sample Report page -->
+
+  <div class="col-start-1 row-start-1 row-end-2 p-2 bg-white box group rounded-xl">
+    <div class="flex items-end justify-between w-auto h-auto space-y-1">
+      <div class="h-6 ml-2 font-bold w-30 item">
+        <span class="border bg-teal-600 px-0.5"></span>
+        <span class="ml-1">Report</span>
+      </div>
+      <div class="h-6 ml-2 font-bold w-30 item">
+        <textarea id="addcomment_val" class="hidden">{{AdditionalComment}}</textarea>
+    </div>
+      <div>
+        <button id="bt_comment_edit_show" type="button" class="px-4 mr-2 text-gray-500 border rounded border-stone-400 hover:border-transparent hover:bg-sky-200 hover:text-teal-700 lg:mt-0">Comment Edit</button>
+        <button onclick="pdfdownload()" class="px-4 mr-2 text-gray-500 border rounded border-stone-400 hover:border-transparent hover:bg-sky-200 hover:text-teal-700 lg:mt-0">PDF Download</button>
+      </div>
+  </div>
+    <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+    
+    <div class="WordSection1 flex justify-center">
+      <div align = "self-auto">
+        <div style="border: 8px%; overflow: auto">
+          <div>
+            <p class="MsoNormal" align="center" style="text-align: left">
+              <b><span lang="EN-US" style="font-size: 20pt; font-family: 'Arial', sans-serif">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Analysis Report</span></b>
+            </p>
+            </br>
+            <p class="MsoNormal">
+              <b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Sample Details&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></b>
+            </p>
+            <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="992" style="width: 743.8pt; border-collapse: collapse">
+              <tr style="height: 20.5pt">
+                <td width="181" style="width: 135.85pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Patient ID</span></p>
+                </td>
+                <td width="296" style="width: 221.65pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{PatientID}}</span></p>
+                </td>
+                <td width="193" style="width: 144.9pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Patient name</span></p>
+                </td>
+                <td width="322" style="width: 241.4pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{PatientName}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.5pt">
+                <td width="181" style="width: 135.85pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Sample ID</span></p>
+                </td>
+                <td width="296" style="width: 221.65pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{DataID}}</span></p>
+                </td>
+                <td width="193" style="width: 144.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Sample Received Date</span></p>
+                </td>
+                <td width="322" style="width: 241.4pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">{{RecvDate}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.5pt">
+                <td width="181" style="width: 135.85pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Sample Source</span></p>
+                </td>
+                <td width="296" style="width: 221.65pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{Source}}</span></p>
+                </td>
+                <td width="193" style="width: 144.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Library Prep Date</span></p>
+                </td>
+                <td width="322" style="width: 241.4pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">{{LibPrepDate}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.5pt">
+                <td width="181" style="width: 135.85pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Culture Type</span></p>
+                </td>
+                <td width="296" style="width: 221.65pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{CultureType}}</span></p>
+                </td>
+                <td width="193" style="width: 144.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Sequencing Date</span></p>
+                </td>
+                <td width="322" style="width: 241.4pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">{{SeqDate}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.5pt">
+                <td width="181" style="width: 135.85pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                </td>
+                <td width="296" style="width: 221.65pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                </td>
+                <td width="181" style="width: 135.85pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Report Date</span></p>
+                </td>
+                <td width="296" style="width: 221.65pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 20.5pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">{{ReportDate}}</span></p>
+                </td>
+              </tr>
+            </table>
+
+            <p class="MsoNormal">
+              <b><span lang="EN-US" style="font-family: 'Arial', sans-serif">&nbsp;</span></b>
+            </p>
+
+            <p class="MsoNormal">
+              <b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Assay Details</span></b>
+            </p>
+
+            <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="992" style="width: 743.8pt; border-collapse: collapse">
+              <tr style="height: 22.35pt">
+                <td width="181" style="width: 135.4pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.35pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Sequencer</span></p>
+                </td>
+                <td width="295" style="width: 221.05pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.35pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">{{Sequencer}}</span></p>
+                </td>
+                <td width="192" style="width: 144.35pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.35pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Method</span></p>
+                </td>
+                <td width="324" style="width: 243pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.35pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">{{Method}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 25.25pt">
+                <td width="181" style="width: 135.4pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 25.25pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Pipeline</span></p>
+                </td>
+                <td width="295" style="width: 221.05pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 25.25pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">{{Pipeline}}</span></p>
+                </td>
+                <td width="192" style="width: 144.35pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 25.25pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Reference</span></p>
+                </td>
+                <td width="324" style="width: 243pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 25.25pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">H37Rv (NC_000962.3)</span></p>
+                </td>
+              </tr>
+              <tr style="height: 22.35pt">
+                <td width="181" style="width: 135.4pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.35pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Quality Control</span></p>
+                </td>
+                <td width="811" colspan="3" style="width: 608.4pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 22.35pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">{{QualityControl}}</span></p>
+                </td>
+              </tr>
+            </table>
+
+            <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">&nbsp;</span></p>
+
+            <p class="MsoNormal">
+              <b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Species Identification</span></b>
+            </p>
+
+            <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="992" style="width: 743.8pt; border-collapse: collapse">
+              <tr style="height: 23.85pt">
+                <td width="178" style="width: 133.4pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 23.85pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Species (%)</span></p>
+                </td>
+                <td width="814" style="width: 610.4pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 23.85pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151"><i>{{Species}}</i></span></p>
+                </td>
+              </tr>
+              <tr style="height: 23.85pt">
+                <td width="178" style="width: 133.4pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 23.85pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Lineage*</span></p>
+                </td>
+                <td width="814" style="width: 610.4pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 23.85pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">{{Lineage}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 23.85pt">
+                <td width="178" style="width: 133.4pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 23.85pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Spoligotype*</span></p>
+                </td>
+                <td width="814" style="width: 610.4pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 23.85pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">{{Spoligotype}}</span></p>
+                </td>
+              </tr>
+            </table>
+
+            <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">*Lineage and spoligotype are only reported for <i>Mycobacterium tuberculosis</i> complex.</span></p>
+
+            <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">The lineage was estimated based on SNPs reported by Napier et al. [Genome Med. 2020;12(1):114]</span></p>
+
+            <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">&nbsp;</span></p>
+
+            <p class="MsoNormal">
+              <b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Molecular Drug Susceptibility Test</span></b>
+            </p>
+
+            <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="992" style="width: 743.8pt; border-collapse: collapse">
+              <tr style="height: 22.4pt">
+                
+                <td width="112" style="width: 84.05pt; border: solid black 1pt; border-top: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 22.4pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Class</span></p>
+                </td>
+                <td width="203" style="width: 151.9pt; border-top: solid black 1pt; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 22.4pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Drug</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: solid black 1pt; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 22.4pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Gene Target* (AA change, VAF, Group)</span></p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: solid black 1pt; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 22.4pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Large deletion</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: solid black 1pt; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 22.4pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Result</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.6pt">
+                <td width="112" rowspan="4" style="width: 84.05pt; border: solid black 1pt; border-top: none; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.6pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">1st-line drugs</span></p>
+                </td>
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.6pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">ISONIAZID (INH)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.6pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in INHGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.6pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{INHComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.6pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{INHResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.9pt">
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">RIFAMPICIN (RIF)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in RIFGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{RIFComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{RIFResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 21.2pt">
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21.2pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">ETHAMBUTOL (EMB)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21.2pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in EMBGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21.2pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{EMBComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21.2pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{EMBResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.8pt">
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.8pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">PYRAZINAMIDE (PZA)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.8pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in PZAGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.8pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{PZAComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.8pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{PZAResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.45pt">
+                <td width="112" rowspan="4" style="width: 84.05pt; border: solid black 1pt; border-top: none; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.45pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">
+                    <span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">2st-line drugs<br />(group A)</span></p>
+                </td>
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.45pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">LEVOFLOXACIN (LFX)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.45pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in LFXGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.45pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{LFXComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.45pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{LFXResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 21pt">
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">MOXIFLOXACIN (MFX)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in MFXGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{MFXComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{MFXResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.6pt">
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.6pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">LINEZOLID (LZD)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.6pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in LZDGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.6pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{LZDComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.6pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{LZDResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.95pt">
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.95pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">BEDAQUILINE (BDQ)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.95pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in BDQGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.95pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{BDQComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.95pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{BDQResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 6.9pt">
+                <td width="112" style="width: 84.05pt; border: solid black 1pt; border-top: none; padding: 0cm 0.25pt 0cm 0.25pt; height: 6.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">2st-line drugs<br />(group B)</span></p>
+                </td>
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 6.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">CLOFAZIMINE (CFZ)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 6.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in CFZGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 6.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{CFZComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 6.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{CFZResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 18.7pt">
+                <td width="112" rowspan="6" style="width: 84.05pt; border: solid black 1pt; border-top: none; padding: 0cm 0.25pt 0cm 0.25pt; height: 18.7pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">
+                    <span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151"
+                      >2st-line drugs<br />
+                      (group C)</span
+                    >
+                  </p>
+                </td>
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 18.7pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">DELAMANID (DLM)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 18.7pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in DLMGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 18.7pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{DLMComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 18.7pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{DLMResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.4pt">
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.4pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">AMIKACIN (AMK)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.4pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in AMKGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.4pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{AMKComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.4pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{AMKResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.7pt">
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.7pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">CAPREOMYCIN (CAP)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.7pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in CAPGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.7pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{CAPComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.7pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{CAPResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 21pt">
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">KANAMYCIN (KAN)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in KANGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{KANComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 21pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{KANResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.6pt">
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.6pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">STREPTOMYCIN (STM)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.6pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in STMGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.6pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{STMComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.6pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{STMResult}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 20.9pt">
+                <td width="203" style="width: 151.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">ETHIONAMIDE (ETO)</span></p>
+                </td>
+                <td width="356" style="width: 266.9pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center">{% for lt in ETOGene %} {% if(loop.index<2) %} {{lt}} {% else %} <br>{{lt}}{% endif %}{% endfor %}</p>
+                </td>
+                <td width="198" style="width: 148.85pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{ETOComment}}</span></p>
+                </td>
+                <td width="123" style="width: 92.1pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 0.25pt 0cm 0.25pt; height: 20.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{ETOResult}}</span></p>
+                </td>
+              </tr>
+            </table>
+
+            <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">*The target genes for resistance mutations were derived from the ‘Catalogue of mutations in <i>Mycobacterium tuberculosis</i> complex and their</span></p>
+            <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">association with drug resistance’. (2021, World Health Organization; Lancet Microbe. 2022;3(4):e265)</span></p>
+            <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">Resistance (R) is reported when mutations are detected in either group 1 or group 2.</span></p>
+            <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">AA change, amino acids change; VAF, variant allele frequency</span></p>
+            <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif">&nbsp;</span></p>
+
+            <p class="MsoNormal"><b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Final Result</span></b></p>
+            <table class="MsoNormalTable " border="0" cellspacing="0" cellpadding="0" width="992" style="width: 743.8pt; border-collapse: collapse">
+              <tr style="height: 98pt"  valign="top">
+                <td style="border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt;">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">
+                    {% for lt in FinalResult %} 
+                      {% if(lt == '___I___') %} 
+                        <i>
+                      {% elif(lt == '___II___') %} 
+                        </i>
+                      {% elif(lt == '___N___') %} 
+                      </br>
+                      {% else %} {{lt}}
+                      {% endif %}
+                    {% endfor %}</p>
+                    </span></p>
+                </td>
+              </tr>
+            </table>
+            <!--
+            <textarea readonly width="998" valign="top" style="width: 745pt; border: solid windowtext 1pt; padding: 0cm 5.4pt 0cm 5.4pt; height: 98.3pt">{{FinalResult}}</textarea>
+            -->
+            <br><br>
+            <p class="MsoNormal"><b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Additional Comment</span></b></p>
+            <textarea readonly width="998" valign="top" style="width: 745pt; border: solid windowtext 1pt; padding: 0cm 5.4pt 0cm 5.4pt; height: 98.3pt">{{AdditionalComment}}</textarea>
+
+            <br><br>
+            <p class="MsoNormal"><b><span lang="EN-US" style="font-size: 11pt; font-family: 'Arial', sans-serif">Authorized By</span></b></p>
+            <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="992" style="width: 743.8pt; border-collapse: collapse">
+              <tr style="height: 21.4pt">
+                <td width="169" rowspan="2" style="width: 126.4pt; border: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 21.4pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Reporting Laboratory</span></p>
+                </td>
+                <td width="322" rowspan="2" style="width: 241pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 21.4pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{ReportLab}}</span></p>
+                </td>
+                <td width="145" style="width: 108.6pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 21.4pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Doctor`s Name</span></p>
+                </td>
+                <td width="356" style="width: 267pt; border: solid black 1pt; border-left: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 21.4pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{DoctorName}}</span></p>
+                </td>
+              </tr>
+              <tr style="height: 39.7pt">
+                <td width="145" style="width: 108.6pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 39.7pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: #374151">Signature</span></p>
+                </td>
+                <td width="356" style="width: 267.05pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 39.7pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">&nbsp;</span></p>
+                </td>
+              </tr>
+              <tr style="height: 18.9pt">
+                <td width="169" style="width: 126.4pt; border: solid black 1pt; border-top: none; padding: 0cm 4.95pt 0cm 4.95pt; height: 18.9pt">
+                  <p class="MsoNormal" align="center" style="text-align: center"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">Address</span></p>
+                </td>
+                <td width="823" colspan="3" style="width: 617.4pt; border-top: none; border-left: none; border-bottom: solid black 1pt; border-right: solid black 1pt; padding: 0cm 4.95pt 0cm 4.95pt; height: 18.9pt">
+                  <p class="MsoNormal"><span lang="EN-US" style="font-family: 'Arial', sans-serif; color: black">{{LabAddress}}</span></p>
+                </td>
+              </tr>
+            </table>
+            <br><br><br>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  
+    <!-- sample edit message box -->
+    <form id="form_comment_edit"  class="modal" action="/samples/editcomment" method='post' >
+      <div class="hidden  fixed inset-0 10 bg-black opacity-40" id="mb_commentedit-bg"></div>
+      <div id="mb_commentedit" class="hidden fixed z-20 px-4 py-4 space-y-1 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md top-1/2 left-1/2 min-w-[80%] drop-shadow-lg">
+          <input id="AnalysisID" name="AnalysisID" class="hidden" value="{{SampleID}}"">
+          <label for="AddtionalComment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Additional Comment</label>
+          <textarea id="AddtionalComment" name="AddtionalComment" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
+          <div class="ml-1  flex flex-col items-center "><br>
+            <div>
+                <button href="#" id="bt_commentedit_cancel" class="px-5 py-2 text-white bg-indigo-400 rounded-md cursor-pointer hover:bg-indigo-700" onclick="toggcleModal('mb_commentedit')">Cancel</button>
+                <button href="#" id="bt_commentedit_submit" class="px-5 py-2 ml-2 text-white bg-blue-400 rounded-md cursor-pointer hover:bg-blue-900">Submit</button>
+            </div>
+          </div>
+      </div>
+  </form>     
+</section>
+
+{% endblock %}
+{% block scripts %} 
+
+<script src="https://unpkg.com/flowbite@1.5.5/dist/datepicker.js"></script>
+<script type="text/javascript">
+  function pdfdownload() {
+    var element = document.createElement('a');
+    element.setAttribute('href','/static/pdf/{{SampleID}}.pdf');
+    element.setAttribute('download','{{SampleID}}.pdf' );
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  }
+  function toggcleModal(modalid) {
+    event.preventDefault();
+    
+    console.log("func:"+modalid);
+    document.getElementById(modalid).classList.toggle("hidden");
+    document.getElementById(modalid+"-bg").classList.toggle("hidden");
+};
+  $("#bt_comment_edit_show").click( function() {        
+    console.log("bt_comment_edit : "+$(this).text());
+    $("#AddtionalComment").val($("#addcomment_val").val() );
+    $("#mb_commentedit").removeClass("hidden");
+    $("#mb_commentedit-bg").removeClass("hidden");  
+});
+
+$("#bt_commentedit_submit").click( function() {         
+  console.log("bt_sample_newadd : "+$(this).text());
+  if( $("#AddtionalComment").val() == '' )
+      $("#AddtionalComment").val(' ')
+  toggcleModal('mb_commentedit')
+
+  $("#form_comment_edit").submit();            
+});
+
+</script>
+{% endblock %}

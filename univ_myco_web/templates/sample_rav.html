@@ -1,0 +1,241 @@
+
+{% extends "base.html" %}
+
+
+{% block title %}
+  <title>GenoMycAnalyzer</title>
+{% endblock %}
+
+{% block content %}
+
+
+<section class="bg-slate-100">
+
+    <nav class="flex flex-wrap items-center justify-between p-2 bg-white teal-100">
+        <div class="flex-grow block w-full lg:flex lg:w-auto lg:items-center">
+        <div class="text-sm lg:flex-grow">
+            <a href="/samples/summary/{{SampleID}}" class="block mt-4 ml-4 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Summary </a>
+            <a href="/samples/statistics/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Statistics&QC </a>
+            <a href="/samples/variants/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Variants </a>
+            <a href="/samples/genedeletion/{{SampleID}}" class="block mt-4 ml-6 text-teal-800 hover:text-yellow-600 lg:mt-0 lg:inline-block">Large deletion </a>
+            <a href="/samples/rav/{{SampleID}}" class="block mt-4 ml-6 text-orange-800 hover:text-yellow-600 lg:mt-0 lg:inline-block"> RAV </a>
+            <a href="/samples/report/{{SampleID}}" class="block mt-4 ml-6 text-teal-700 hover:text-yellow-600 lg:mt-0 lg:inline-block"> Report </a>
+        </div>
+        </div>
+    </nav>
+<!--
+    <div class="max-w-50 rounded overflow-hidden shadow-lg z-40">
+        <div class="px-6 py-4">
+            <div class="font-bold text-xl mb-2">Mutation group</div>
+            <p class="text-gray-700 text-base">Group1: Associated with resistance</p>
+            <p class="text-gray-700 text-base">Group2: Associated with resistance – Interim</p>
+            <p class="text-gray-700 text-base">Group3: Uncertain significance</p>
+            <p class="text-gray-700 text-base">Group4: Not associated with resistance – Interim</p>
+            <p class="text-gray-700 text-base">Group5: Not associated with resistance</p>
+        </div>
+    </div>
+-->
+
+
+
+
+
+    <div class="h-0.5 bg-gradient-to-r from-cyan-200 to-blue-300"></div>
+
+        <!-- RAV(resistance-associated variants) page -->
+        <div class="col-start-1 row-start-1 row-end-2 p-2 bg-white box group rounded-xl">
+            <div class="flex items-end justify-between w-auto h-auto space-y-1">
+                <div class="h-6 ml-2 font-bold w-30 item">
+                    <span class="border bg-teal-600 px-0.5"></span>
+                    <span class="ml-1">RAV(resistance-associated variants)</span>
+                </div>
+ 
+                <div class="h-6 ml-2 w-30 item">
+                    Mutation group <button data-tooltip-target="tooltip-mutaion" data-tooltip-placement="bottom" type="button" class="text-white bg-white hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-1 py-0.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">&#10068</button> : 
+                    <label><input type="checkbox" id="ravfilter1" name="ravfilter1" value="1" onClick="filter()"{% if '1' in ravfilter %}checked{%endif%}>&nbsp;1&nbsp;&nbsp;</label>
+                    <label><input type="checkbox" id="ravfilter2" name="ravfilter2" value="2" onClick="filter()"{% if '2' in ravfilter %}checked{%endif%}>&nbsp;2&nbsp;&nbsp;</label>
+                    <label><input type="checkbox" id="ravfilter3" name="ravfilter3" value="3" onClick="filter()"{% if '3' in ravfilter %}checked{%endif%}>&nbsp;3&nbsp;&nbsp;</label>
+                    <label><input type="checkbox" id="ravfilter4" name="ravfilter4" value="4" onClick="filter()"{% if '4' in ravfilter %}checked{%endif%}>&nbsp;4&nbsp;&nbsp;</label>
+                    <label><input type="checkbox" id="ravfilter5" name="ravfilter5" value="5" onClick="filter()"{% if '5' in ravfilter %}checked{%endif%}>&nbsp;5&nbsp;&nbsp;</label>
+
+                    <div id="tooltip-mutaion" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-100 rounded-lg shadow-sm opacity-0 tooltip dark:bg-white-700">
+                        <div class="px-6 py-4 text-gray-900">
+                            <div class="font-bold text-xl mb-2">Mutation group</div>
+                            <p class="text-base">Group1: Associated with resistance</p>
+                            <p class="text-base">Group2: Associated with resistance – Interim</p>
+                            <p class="text-base">Group3: Uncertain significance</p>
+                            <p class="text-base">Group4: Not associated with resistance – Interim</p>
+                            <p class="text-base">Group5: Not associated with resistance</p>
+                        </div>
+                    </div>
+                    
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    
+                    <button onclick = "exportVariant()" type="button" class="px-4 mr-2 text-gray-500 border rounded border-stone-400 hover:border-transparent hover:bg-sky-200 hover:text-teal-700 lg:mt-0">Export</button>
+                </div>
+            </div>
+            <div class="flex px-2 mt-2 mb-2 ml-1 mr-1 border-t border-gray-300"></div>
+        
+            <!-- Sample Basic Statisics table -->
+            <table class="w-full text-sm text-center text-gray-900 bg-white border-separate shadow-none">
+                <thead>
+                    <tr>
+                        <!-- <th href="/asdf" class="w-1/12 p-1 text-white bg-blue-500"><a href="/asdf">Position</a></th> -->
+                        <th class="w-[6%] p-1 text-white bg-blue-500">Position</th>
+                        <th class="w-[8%] p-1 text-white bg-blue-500">REF</th>
+                        <th class="w-[8%] p-1 text-white bg-blue-500">ALT</th>
+                        <th class="w-[4%] p-1 text-white bg-blue-500">Depth</th>
+                        <th class="w-[4%] p-1 text-white bg-blue-500">Variant allele frequency</th>
+                        <th class="w-[12%] p-1 text-white bg-blue-500">Variant type</th>
+                        <th class="w-[8%] p-1 text-white bg-blue-500">Gene</th>
+                        <th class="w-[8%] p-1 text-white bg-blue-500">Gene ID</th>
+                        <th class="w-[8%] p-1 text-white bg-blue-500">Nucleotide change</th>
+                        <th class="w-[10%] p-1 text-white bg-blue-500">Amino Acid change</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">A<br>M<br>K</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">B<br>D<br>Q</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">C<br>A<br>P</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">C<br>F<br>Z</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">D<br>L<br>M</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">E<br>M<br>B</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">E<br>T<br>O</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">I<br>N<br>H</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">K<br>A<br>N</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">L<br>F<br>X</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">L<br>Z<br>D</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">M<br>F<br>X</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">P<br>Z<br>A</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">R<br>I<br>F</th>
+                        <th class="w-auto p-0.5 text-white bg-blue-500 text-xs">S<br>T<br>M</th>
+                        <th class="w-auto text-white bg-blue-500 p-0.5">Overlap Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for lt in reseultlt %} 
+                {% if(loop.index % 2) %}
+                <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 text-blue-900 bg-blue-100">
+                {% else %}
+                <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 text-blue-900 bg-blue-200">
+                {% endif %}
+                    <!--<td class="p-1">{{lt.Position}}</td>-->
+                    <td class="p-1" onClick="window.open('/samples/igvview/{{lt.Sample_Id}}?locus={{lt.Position}}','','');">{{lt.Position}}</td>
+                    <td class="p-1">{{lt.Ref}}</td>
+                    <td class="p-1">{{lt.Alt}}</td>
+                    <td class="p-1">{{lt.Depth}}</td>
+                    <td class="p-1">{{lt.VarAlleleFreq}}%</td>
+                    <td class="p-1">{{lt.VarType}}</td>
+                    <td class="p-1">{{lt.Gene}}</td>
+                    <td class="p-1">{{lt.GeneID}}</td>
+                    <td class="p-1">{{lt.Necleotide}}</td>
+                    <td class="p-1">{{lt.AminoAcid}}</td>
+                    {% if (lt.AMK == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.AMK}}</td>{% elif (lt.AMK == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.AMK}}</td>{% elif (lt.AMK == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.AMK}}</td>{% elif (lt.AMK == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.AMK}}</td>{% elif (lt.AMK == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.AMK}}</td>{% else %}<td class="p-0.5">{{lt.AMK}}</td>{% endif %}
+                    {% if (lt.BDQ == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.BDQ}}</td>{% elif (lt.BDQ == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.BDQ}}</td>{% elif (lt.BDQ == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.BDQ}}</td>{% elif (lt.BDQ == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.BDQ}}</td>{% elif (lt.BDQ == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.BDQ}}</td>{% else %}<td class="p-0.5">{{lt.BDQ}}</td>{% endif %}
+                    {% if (lt.CAP == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.CAP}}</td>{% elif (lt.CAP == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.CAP}}</td>{% elif (lt.CAP == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.CAP}}</td>{% elif (lt.CAP == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.CAP}}</td>{% elif (lt.CAP == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.CAP}}</td>{% else %}<td class="p-0.5">{{lt.CAP}}</td>{% endif %}
+                    {% if (lt.CFZ == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.CFZ}}</td>{% elif (lt.CFZ == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.CFZ}}</td>{% elif (lt.CFZ == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.CFZ}}</td>{% elif (lt.CFZ == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.CFZ}}</td>{% elif (lt.CFZ == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.CFZ}}</td>{% else %}<td class="p-0.5">{{lt.CFZ}}</td>{% endif %}
+                    {% if (lt.DLM == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.DLM}}</td>{% elif (lt.DLM == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.DLM}}</td>{% elif (lt.DLM == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.DLM}}</td>{% elif (lt.DLM == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.DLM}}</td>{% elif (lt.DLM == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.DLM}}</td>{% else %}<td class="p-0.5">{{lt.DLM}}</td>{% endif %}
+                    {% if (lt.EMB == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.EMB}}</td>{% elif (lt.EMB == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.EMB}}</td>{% elif (lt.EMB == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.EMB}}</td>{% elif (lt.EMB == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.EMB}}</td>{% elif (lt.EMB == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.EMB}}</td>{% else %}<td class="p-0.5">{{lt.EMB}}</td>{% endif %}
+                    {% if (lt.ETO == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.ETO}}</td>{% elif (lt.ETO == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.ETO}}</td>{% elif (lt.ETO == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.ETO}}</td>{% elif (lt.ETO == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.ETO}}</td>{% elif (lt.ETO == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.ETO}}</td>{% else %}<td class="p-0.5">{{lt.ETO}}</td>{% endif %}
+                    {% if (lt.INH == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.INH}}</td>{% elif (lt.INH == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.INH}}</td>{% elif (lt.INH == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.INH}}</td>{% elif (lt.INH == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.INH}}</td>{% elif (lt.INH == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.INH}}</td>{% else %}<td class="p-0.5">{{lt.INH}}</td>{% endif %}
+                    {% if (lt.KAN == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.KAN}}</td>{% elif (lt.KAN == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.KAN}}</td>{% elif (lt.KAN == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.KAN}}</td>{% elif (lt.KAN == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.KAN}}</td>{% elif (lt.KAN == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.KAN}}</td>{% else %}<td class="p-0.5">{{lt.KAN}}</td>{% endif %}
+                    {% if (lt.LFX == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.LFX}}</td>{% elif (lt.LFX == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.LFX}}</td>{% elif (lt.LFX == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.LFX}}</td>{% elif (lt.LFX == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.LFX}}</td>{% elif (lt.LFX == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.LFX}}</td>{% else %}<td class="p-0.5">{{lt.LFX}}</td>{% endif %}
+                    {% if (lt.LZD == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.LZD}}</td>{% elif (lt.LZD == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.LZD}}</td>{% elif (lt.LZD == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.LZD}}</td>{% elif (lt.LZD == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.LZD}}</td>{% elif (lt.LZD == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.LZD}}</td>{% else %}<td class="p-0.5">{{lt.LZD}}</td>{% endif %}
+                    {% if (lt.MFX == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.MFX}}</td>{% elif (lt.MFX == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.MFX}}</td>{% elif (lt.MFX == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.MFX}}</td>{% elif (lt.MFX == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.MFX}}</td>{% elif (lt.MFX == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.MFX}}</td>{% else %}<td class="p-0.5">{{lt.MFX}}</td>{% endif %}
+                    {% if (lt.PZA == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.PZA}}</td>{% elif (lt.PZA == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.PZA}}</td>{% elif (lt.PZA == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.PZA}}</td>{% elif (lt.PZA == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.PZA}}</td>{% elif (lt.PZA == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.PZA}}</td>{% else %}<td class="p-0.5">{{lt.PZA}}</td>{% endif %}
+                    {% if (lt.RIF == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.RIF}}</td>{% elif (lt.RIF == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.RIF}}</td>{% elif (lt.RIF == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.RIF}}</td>{% elif (lt.RIF == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.RIF}}</td>{% elif (lt.RIF == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.RIF}}</td>{% else %}<td class="p-0.5">{{lt.RIF}}</td>{% endif %}
+                    {% if (lt.STM == 1) %}<td class="bg-red-300 p-0.5 ">{{lt.STM}}</td>{% elif (lt.STM == 2) %}<td class="bg-red-100 p-0.5 ">{{lt.STM}}</td>{% elif (lt.STM == 3) %}<td class="bg-gray-300 p-0.5 ">{{lt.STM}}</td>{% elif (lt.STM == 4) %}<td class="bg-green-100 p-0.5 ">{{lt.STM}}</td>{% elif (lt.STM == 5) %}<td class="bg-green-300 p-0.5 ">{{lt.STM}}</td>{% else %}<td class="p-0.5">{{lt.STM}}</td>{% endif %}
+                    
+                    <td class="p-1">{{lt.OverlapLv}}</td>
+                </tr>
+                {% endfor %}
+                
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    
+</section>
+       
+{% endblock %}
+{% block scripts %} 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
+
+<script type="text/javascript">
+
+    const modalEl = document.getElementById('info-popup');
+    const privacyModal = new Modal(modalEl, {
+        placement: 'center'
+    });
+    
+    privacyModal.show();
+    
+    const closeModalEl = document.getElementById('close-modal');
+    closeModalEl.addEventListener('click', function() {
+        privacyModal.hide();
+    });
+    
+    const acceptPrivacyEl = document.getElementById('confirm-button');
+    acceptPrivacyEl.addEventListener('click', function() {
+        alert('privacy accepted');
+        privacyModal.hide();
+    });
+
+
+    function exportVariant() {
+        var f = document.createElement("form"); // form 엘리멘트 생성
+        f.setAttribute("method","post"); // method 속성을 post로 설정
+        f.setAttribute("action","/samples/sampleExport"); // submit했을 때 무슨 동작을 할 것인지 설정
+        document.body.appendChild(f); // 현재 페이지에 form 엘리멘트 추가 
+
+        var val = document.createElement("input"); // input 엘리멘트 생성 
+        val.setAttribute("type","text"); // type 속성을 text으로 설정
+        val.setAttribute("name","exportdata"); 
+        val.setAttribute("value","<RAVExport>"); 
+        f.appendChild(val); // form 엘리멘트에 input 엘리멘트 추가 
+        var val = document.createElement("input"); // input 엘리멘트 생성 
+        val.setAttribute("type","text"); // type 속성을 text으로 설정
+        val.setAttribute("name","sampleid"); 
+        val.setAttribute("value","{{SampleID}}"); 
+        f.appendChild(val); // form 엘리멘트에 input 엘리멘트 추가 
+        var val = document.createElement("input"); // input 엘리멘트 생성 
+        val.setAttribute("type","text"); // type 속성을 text으로 설정
+        val.setAttribute("name","sampledataid"); 
+        val.setAttribute("value","{{SampledataID}}"); 
+        f.appendChild(val); // form 엘리멘트에 input 엘리멘트 추가 
+        f.submit(); // form 태그 서브밋 실행     
+        document.body.removeChild(f);
+
+
+    }
+    function filter(){
+        var s = ''
+        var f = document.createElement("form"); // form 엘리멘트 생성
+        f.setAttribute("method","get"); // method 속성을 post로 설정
+        f.setAttribute("action","/samples/rav/{{SampleID}}"); // submit했을 때 무슨 동작을 할 것인지 설정
+        document.body.appendChild(f); // 현재 페이지에 form 엘리멘트 추가 
+        //debugger;
+
+        s += document.getElementById("ravfilter1").checked?'1':''
+        s += document.getElementById("ravfilter2").checked?'2':''
+        s += document.getElementById("ravfilter3").checked?'3':''
+        s += document.getElementById("ravfilter4").checked?'4':''
+        s += document.getElementById("ravfilter5").checked?'5':''
+
+
+        var val1 = document.createElement("input"); // input 엘리멘트 생성 
+        val1.setAttribute("type","text"); // type 속성을 text으로 설정
+        val1.setAttribute("name","ravfilter"); 
+        val1.setAttribute("value",s); 
+        f.appendChild(val1); // form 엘리멘트에 input 엘리멘트 추가 
+
+        var val2 = document.createElement("input"); // input 엘리멘트 생성 
+        val2.setAttribute("type","text"); // type 속성을 text으로 설정
+        val2.setAttribute("name","pageno"); 
+        val2.setAttribute("value","{{nowpage}}"); 
+        f.appendChild(val2); // form 엘리멘트에 input 엘리멘트 추가 
+        
+        f.submit(); // form 태그 서브밋 실행     
+        document.body.removeChild(f);
+    }
+</script>
+{% endblock %}

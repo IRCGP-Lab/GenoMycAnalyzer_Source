@@ -1,0 +1,96 @@
+{% extends "base.html" %} {% block title %}
+<title>GenoMycAnalyzer</title>
+{% endblock %} {% block content %}
+
+<section class="py-5 px-7 bg-[#3056D3]">
+  <br />
+  <h1 class="mb-8 text-3xl font-bold leading-snug text-white text-center sm:text-4xl sm:leading-snug md:text-[25px] md:leading-snug">GenoMycAnalyzer Sign in</h1>
+  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
+    <!-- component -->
+
+    <div class="bg-[#3056D3] flex flex-col width-300">
+      <div class="bg-[#1E4E8C] px-8 py-8 rounded shadow-md w-96">
+        <form action="/user/login" method="post" name="UserLogin" id="form_login">
+          <label for="Email" class="block mb-2 text-sm font-medium text-white dark:text-white">Your email</label>
+          {% if useremail %}
+          <input type="text" class="block border border-grey-light w-full p-3 rounded mb-4" id="Email" name="Email" placeholder="Email(name@company.com)" value={{useremail}} />
+          {% else %}
+          <input type="text" class="block border border-grey-light w-full p-3 rounded mb-4" id="Email" name="Email" placeholder="Email(name@company.com)" />
+          {% endif %}
+          <label for="EmailPW" class="block mb-2 text-sm font-medium text-white dark:text-white">Password</label>
+          <input type="password" class="block border border-grey-light w-full p-3 rounded mb-4" id="EmailPW" name="EmailPW" placeholder="Password" onkeyup="if(window.event.keyCode==13){bt_verifyEmail.click()}" />
+          {% if ErrorMsg %}
+          <div class="text-left text-sm text-[#FF7F27] mt-1 mb-2">{{ErrorMsg}}</a></div>
+          {% endif %}
+          
+          <div align="right">
+            <!--<input type="submit"  class="bg-blue-500 text-center flex justify-center items-center w-1/2 text-white px-4 py-3 rounded-md focus:outline-none" value="Login"></input>-->
+            <!--<button class="bg-blue-500 flex justify-center items-center w-1/2 text-white px-4 py-3 rounded-md focus:outline-none">Login</button>-->
+            <button id="bt_verifyEmail" type="button" class="bg-blue-500 flex justify-center items-center w-1/2 text-white px-4 py-3 rounded-md focus:outline-none">Login</button>
+          </div>
+        </form>
+
+        <div class="text-right text-sm text-white mt-4 px-2">Forgot your <a class="no-underline border-b border-grey-dark text-grey-dark" href="resendpassword">password?</a></div>
+      </div>
+
+      <div class="bg-[#3056D3] text-white mt-6">I want to <a class="no-underline border-b border-blue text-blue" href="register">sign up</a></div>
+      <br /><br /><br /><br /><br /><br />
+    </div>
+  </div>
+</section>
+
+{% endblock %} {% block scripts %}
+
+<script type="text/javascript">
+  function verifyEmail(email) {
+    //var emailVal = $("#email").val();
+    var reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+
+    if (!reg_email.test(email)) {
+      return false;
+    } else {
+        return true;  
+    }
+  }
+
+  function chkPW(pw) {
+    //var pw = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+    var reg = /^[A-Za-z0-9`~!@#\$%\^&\*\(\)\{\}\[\]\-_=\+\\|;:'"<>,\./\?]{8,30}$/;
+                
+    //var pw = $("#emailpw").val();
+
+    if (!reg.test(pw)) {
+      //alert("Password must be at least 8 characters long and must contain all numeric, uppercase, lowercase, and special characters.");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  $("#bt_verifyEmail").click(function () {
+    var obEmail = document.getElementById("Email");
+    var obEmailpw = document.getElementById("EmailPW");
+    if (!obEmail.value) {
+      alert("Please enter your email.");
+      obEmail.focus();
+      return;
+    } else {
+      if (!verifyEmail(obEmail.value)) {
+        alert("Invalid email address");
+        obEmail.focus();
+        return;
+      }
+    }
+    if (!obEmailpw) {
+      alert("Please enter your password.");
+      obEmailpw.focus();
+      return;
+    }
+    //obEmail.value = "";
+    
+    $("#form_login").submit();
+    obEmailpw.value = "";
+  });
+
+</script>
+{% endblock %}
