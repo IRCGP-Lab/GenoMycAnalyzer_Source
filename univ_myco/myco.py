@@ -189,7 +189,7 @@ class AnalyzerClass():
                             'SnpEff_ud': '1000'
                             }
                             
-        self.tooldir = '/home/jj/tools'
+        self.tooldir = '/homepath/tools'
         self.toolpath = self.tooldir + '/'
         self.datadir = os.getcwd()+'/Data'
         self.datapath = self.datadir + '/'
@@ -352,13 +352,13 @@ class AnalyzerClass():
                 circfg =  ' '.join(s for s in ctmp)
                 f.close()
                 
-                imagedata_path = '/home/jj/univ_myco_web/static/circos'
+                imagedata_path = '/homepath/univ_myco_web/static/circos'
                 
-                circfg = circfg.replace("[[KARYITYOE_FILE]]",   "/home/jj/tools/circos-0.69-9/mycoLib/MycoChase_karyotype.txt")
-                circfg = circfg.replace("[[HOUSEKEEP_FILE]]",   "/home/jj/tools/circos-0.69-9/mycoLib/housekeeping.conf")
+                circfg = circfg.replace("[[KARYITYOE_FILE]]",   "/homepath/tools/circos-0.69-9/mycoLib/MycoChase_karyotype.txt")
+                circfg = circfg.replace("[[HOUSEKEEP_FILE]]",   "/homepath/tools/circos-0.69-9/mycoLib/housekeeping.conf")
                 circfg = circfg.replace("[[HIST_FILE]]",        os.path.dirname(depthfile) + '/myco.hist.txt')
                 circfg = circfg.replace("[[VARIANT_FILE]]",     os.path.dirname(depthfile) + '/myco.text.txt')
-                circfg = circfg.replace("[[COLORPATTERN_FILE]]","/home/jj/tools/circos-0.69-9/etc/colors_fonts_patterns.conf")
+                circfg = circfg.replace("[[COLORPATTERN_FILE]]","/homepath/tools/circos-0.69-9/etc/colors_fonts_patterns.conf")
                 circfg = circfg.replace("[[DATA_DIR]]",         imagedata_path)
                 circfg = circfg.replace("[[DATA_FILE]]",        self.sampleno+'.png')
 
@@ -366,7 +366,7 @@ class AnalyzerClass():
                 f.write(circfg)
                 f.close()
                 
-                stmp = 'perl "/home/jj/tools/circos-0.69-9/bin/circos" -conf "' + os.getcwd()+'/circos.conf"'
+                stmp = 'perl "/homepath/tools/circos-0.69-9/bin/circos" -conf "' + os.getcwd()+'/circos.conf"'
                 os.system(stmp)
                 time.sleep(0.5)
                 fileck = os.path.exists(imagedata_path+'/'+self.sampleno+'.png')
@@ -818,7 +818,7 @@ class AnalyzerClass():
         for s in self.tempsub_dir:
             os.makedirs(s)
 
-        imagedata_path = '/home/jj/univ_myco_web/static/circos'
+        imagedata_path = '/homepath/univ_myco_web/static/circos'
         if os.path.exists(imagedata_path+'/'+self.sampleno+'.png'):
             os.remove(imagedata_path+'/'+self.sampleno+'.png')
         if os.path.exists(imagedata_path+'/'+self.sampleno+'.jpg'):

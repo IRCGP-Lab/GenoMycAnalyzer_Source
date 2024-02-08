@@ -998,7 +998,7 @@ async def get_samplereport(request: Request, sampleid : int, Session: Session = 
     smp = SampleGroup.filter(id=sampleid, user_id=lv['userid']).first()
     
     if not smp:
-        os.remove('/home/jj/univ_myco/pdf/{0}.pdf'.format(sampleid))
+        os.remove('/homepath/univ_myco/pdf/{0}.pdf'.format(sampleid))
         return RedirectResponse(url="/samples", status_code=302)
 
     form = SampleReportForm(request)
@@ -1170,7 +1170,7 @@ async def get_samplereport(request: Request, sampleid : int, Session: Session = 
     smp = SampleGroup.filter(id=sampleid, user_id=lv['userid']).first()
     
     if not smp:
-        os.remove('/home/jj/univ_myco/pdf/{0}.pdf'.format(sampleid))
+        os.remove('/homepath/univ_myco/pdf/{0}.pdf'.format(sampleid))
         return RedirectResponse(url="/samples", status_code=302)
 
 

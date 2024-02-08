@@ -7,11 +7,11 @@ MAX_API_WHITELIST = 10
 MAX_PAGE_ROW_COUNT = 15
 MAX_PAGE_NUMBER_COUNT = 10
 
-DATA_DIR = "/home/jj/univ_myco/Data"
+DATA_DIR = "/homepath/univ_myco/Data"
 DATA_PATH = DATA_DIR+"/"
-REF_DIR = "/home/jj/univ_myco/Reference"
+REF_DIR = "/homepath/univ_myco/Reference"
 REF_PATH = REF_DIR+"/"
-TOOLS_DIR ="/home/jj/tools"
+TOOLS_DIR ="/homepath/tools"
 TOOLS_PATH = TOOLS_DIR+"/"
 TEMP_DIR = DATA_DIR+"/Temp"
 TEMP_PATH = TEMP_DIR+"/"

@@ -275,7 +275,7 @@ async def get_pdfreport(request: Request, sampleid: int):
     ser = SampleGroup.user_id.__eq__(lv['userid'])
     cnt = SampleGroup.customfilter(session=Session,filter=ser).pagecount()
         
-    file_path = "/home/jj/univ_myco_web/pdf/{0}.pdf".format(sampleid)
+    file_path = "/homepath/univ_myco_web/pdf/{0}.pdf".format(sampleid)
     fex = os.path.isfile(file_path)
     
     if(fex==False) or (cnt==0):
